@@ -25,7 +25,7 @@ class BottomNavItem extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: AppColor.bottomNavigationBarIconBackground,
-        border: Border.all(color: AppColor.bottomNavigationBarIcon, width: 2),
+        border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 2),
         borderRadius: BorderRadius.circular(32),
       ),
       child: Image.asset(
@@ -57,14 +57,14 @@ class BottomNavProfileItem extends StatelessWidget {
       padding: EdgeInsets.all(isSelected ? 12 : 14),
       decoration: BoxDecoration(
         color: AppColor.bottomNavigationBarIconBackground,
-        border: Border.all(color: AppColor.bottomNavigationBarIcon, width: 2),
+        border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 2),
         borderRadius: BorderRadius.circular(
           AppSize.bottomNavigationBarIconRadius,
         ),
       ),
       child: Image.asset(
         iconAssets,
-        color: AppColor.bottomNavigationBarIcon,
+        color: AppColor.bottomNavigationBarBorder,
         width: isSelected
             ? AppSize.bottomNavigationBarActiveIcon - 8
             : AppSize.bottomNavigationBarIcon - 12,
