@@ -1,10 +1,9 @@
 import 'package:cookie/screen/collection_screen.dart';
 import 'package:cookie/screen/oven_screen.dart';
 import 'package:cookie/screen/profile_screen.dart';
-import 'package:core/app_assets.dart';
-import 'package:core/app_string.dart';
-import 'package:core/app_size.dart';
-import 'package:core/app_color.dart';
+import 'package:cookie/widgets/bottom_nav_item.dart';
+import 'package:core/values/app_assets.dart';
+import 'package:core/widgets/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,59 +30,34 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const CollectionScreen(),
     const OvenScreen(),
+    const CollectionScreen(),
     const ProfileScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  final List<NavItemData> _navItemDataList = const [
+    NavItemData(AppAssets.icOven),
+    NavItemData(AppAssets.icCollection),
+    NavItemData(AppAssets.icProfile, isProfile: true),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final navItems = List.generate(_navItemDataList.length, (index) {
+      final icon = _navItemDataList[index];
+      final isSelected = _selectedIndex == index;
+
+      return icon.isProfile
+          ? BottomNavProfileItem(iconAssets: icon.asset, isSelected: isSelected)
+          : BottomNavItem(iconAssets: icon.asset, isSelected: isSelected);
+    });
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _screens),
-      bottomNavigationBar: BottomNavigationBar(
+      extendBody: true,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        backgroundColor: AppColor.bottomNavigationBarBackground,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              AppAssets.icOven,
-              width: AppSize.bottomNavigationBarIconSize,
-              height: AppSize.bottomNavigationBarIconSize,
-            ),
-            activeIcon: Image.asset(
-              AppAssets.icOven,
-              width: AppSize.bottomNavigationBarActiveIconSize,
-              height: AppSize.bottomNavigationBarActiveIconSize,),
-            label: AppStrings.labelBottomNavigationBarOven),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              AppAssets.icCollection,
-              width: AppSize.bottomNavigationBarIconSize,
-              height: AppSize.bottomNavigationBarIconSize,),
-            activeIcon: Image.asset(
-              AppAssets.icCollection,
-              width: AppSize.bottomNavigationBarActiveIconSize,
-              height: AppSize.bottomNavigationBarActiveIconSize,),
-            label: AppStrings.labelBottomNavigationBarCollection,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              size: _selectedIndex == 2 ? AppSize.bottomNavigationBarActiveIconSize : AppSize.bottomNavigationBarIconSize,
-              color: AppColor.bottomNavigationBarIcon,
-            ),
-            label: AppStrings.labelBottomNavigationBarProfile,
-          ),
-        ],
+        onTap: (index) => setState(() => _selectedIndex = index),
+        items: navItems,
       ),
     );
   }
