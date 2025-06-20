@@ -41,6 +41,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  core:
+    dependency: "direct main"
+    description:
+      path: "packages/core"
+      relative: true
+    source: path
+    version: "0.0.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -49,6 +56,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  data:
+    dependency: "direct main"
+    description:
+      path: "packages/data"
+      relative: true
+    source: path
+    version: "0.0.1"
+  domain:
+    dependency: "direct main"
+    description:
+      path: "packages/domain"
+      relative: true
+    source: path
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -139,6 +160,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  presentation:
+    dependency: "direct main"
+    description:
+      path: "packages/presentation"
+      relative: true
+    source: path
+    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
