@@ -11,7 +11,30 @@ class OvenScreen extends StatefulWidget {
   State<OvenScreen> createState() => _OvenScreen();
 }
 
-class _OvenScreen extends State<OvenScreen> {
+class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 800), vsync: this);
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,38 +67,57 @@ class _OvenScreen extends State<OvenScreen> {
     final double maxWidth = screenWidth * 0.8;
     final double maxHeight = screenHeight * 0.8;
 
-    final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(top: maxHeight * 0.17, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.17, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.34, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.34, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.51, left: (maxWidth * 0.7) / 2, asset: AppAssets.imgCookieNormal1),
-    ];
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 12.0),
-      child: Center(child: Stack(
-        alignment: Alignment.center,
-        children: [
-          _buildTrayImage(maxWidth, maxHeight),
-          ...cookieButtonDataList.map((btn) {
-            return Positioned(
-              top: btn.top,
-              left: btn.left,
-              right: btn.right,
-              child: CustomImageButton(imgAssets: btn.asset,
-                isOpened: false,
-                width: maxWidth * 0.3,
-                height: maxHeight * 0.3,
-                onPressed: () {
-                  print("test");
-                },
-              ),
-            );
-          })
-        ],
-      ),),
+      child: Center(
+        child: SizedBox(
+          width: maxWidth, height: maxHeight,
+          child: _buildAnimatedContent(maxWidth, maxHeight)
+        ),
+      ),
     );
+  }
+
+  Widget _buildAnimatedContent(double maxWidth, double maxHeight) {
+    return SlideTransition(
+        position: _offsetAnimation, child: _ui(maxWidth, maxHeight));
+  }
+
+  Widget _ui(double maxWidth, double maxHeight) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned.fill(
+          child: _buildTrayImage(maxWidth, maxHeight),
+        ),
+        ..._cookieButtonList(maxWidth, maxHeight)
+      ],
+    );
+  }
+
+  List<Widget> _cookieButtonList(double maxWidth, double maxHeight) {
+    final List<CookieButtonData> cookieButtonDataList = [
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, asset: AppAssets.imgCookieNormal1),
+    ];
+    return cookieButtonDataList.map((btn) {
+      return Positioned(
+        top: btn.top,
+        left: btn.left,
+        right: btn.right,
+        child: CustomImageButton(imgAssets: btn.asset,
+          isOpened: false,
+          width: maxWidth * 0.3,
+          height: maxHeight * 0.3,
+          onPressed: () {
+            print("test");
+          },
+        ),
+      );
+    }).toList();
   }
 
   Widget _buildTrayImage(double imgWidth, double imgHeight) {
