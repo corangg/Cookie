@@ -97,10 +97,10 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
 
   List<Widget> _cookieButtonList(double maxWidth, double maxHeight) {
     final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, asset: AppAssets.imgCookieNormal1),
-      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: AppAssets.imgCookieCheering1),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, asset: AppAssets.imgCookieComfort1),
+      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, asset: AppAssets.imgCookiePassion1),
+      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, asset: AppAssets.imgCookieSermon1),
       CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, asset: AppAssets.imgCookieNormal1),
     ];
     return cookieButtonDataList.map((btn) {

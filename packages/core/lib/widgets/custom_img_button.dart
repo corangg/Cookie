@@ -36,7 +36,7 @@ class _CustomImageButton extends State<CustomImageButton> {
     return GestureDetector(
       onTap: _handleClick,
       child: Image.asset(
-        AppAssets.imgCookieNormal1,
+        widget.imgAssets,
         width: widget.width,
         height: widget.height,
       ),
