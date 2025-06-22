@@ -4,6 +4,7 @@ import 'package:cookie/screen/profile_screen.dart';
 import 'package:cookie/widgets/bottom_nav_item.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/widgets/custom_bottom_nav_bar.dart';
+import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
 void main() {

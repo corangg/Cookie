@@ -2,13 +2,6 @@ import 'package:core/values/app_color.dart';
 import 'package:core/values/app_size.dart';
 import 'package:flutter/material.dart';
 
-class NavItemData {
-  final String asset;
-  final bool isProfile;
-
-  const NavItemData(this.asset, {this.isProfile = false});
-}
-
 class BottomNavItem extends StatelessWidget {
   final String iconAssets;
   final bool isSelected;
