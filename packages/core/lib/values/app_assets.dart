@@ -6,6 +6,11 @@ class AppAssets {
   static const imgTray = 'assets/img/img_oven_tray.png';
   static const imgCookieNormal1 = 'assets/img/img_cookie_normal_1.png';
   static const imgCookieCheering1 = 'assets/img/img_cookie_cheering_1.png';
+  static const imgCookieCheering2 = 'assets/img/img_cookie_cheering_2.png';
+  static const imgCookieCheering3 = 'assets/img/img_cookie_cheering_3.png';
+  static const imgCookieCheering4 = 'assets/img/img_cookie_cheering_4.png';
+  static const imgCookieCheering5 = 'assets/img/img_cookie_cheering_5.png';
+  static const imgCookieCheering6 = 'assets/img/img_cookie_cheering_6.png';
   static const imgCookieComfort1 = 'assets/img/img_cookie_comfort_1.png';
   static const imgCookiePassion1 = 'assets/img/img_cookie_passion_1.png';
   static const imgCookieSermon1 = 'assets/img/img_cookie_sermon_1.png';

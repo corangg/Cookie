@@ -18,3 +18,21 @@ class CookieButtonData {
     this.right,
   });
 }
+
+class CookieImageAssetsData {
+  final String trayCookie;
+  final String catchCookie;
+  final String crackCookie;
+  final String halfOpenCookie;
+  final String openCookie;
+  final String crushCookie;
+
+  const CookieImageAssetsData(
+    this.trayCookie,
+    this.catchCookie,
+    this.crackCookie,
+    this.halfOpenCookie,
+    this.openCookie,
+    this.crushCookie,
+  );
+}

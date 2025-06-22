@@ -15,13 +15,19 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
 
+  final List<CookieImageAssetsData> cookieImageDataList = [
+    CookieImageAssetsData(
+        AppAssets.imgCookieCheering1, AppAssets.imgCookieCheering2,
+        AppAssets.imgCookieCheering3, AppAssets.imgCookieCheering4,
+        AppAssets.imgCookieCheering5, AppAssets.imgCookieCheering6)
+  ];
+
+  int _showOverlayImage = -1;
+
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 800), vsync: this);
-
+    _controller = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
@@ -37,10 +43,18 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColor.mainBackground,
       appBar: _buildAppBar(),
-      body: SafeArea(child: _buildBody(context)),
+      body: Stack(
+        children: [
+          SafeArea(child: _buildBody(context)),
+          _openCookieUi(_showOverlayImage, screenWidth, screenHeight)
+        ],
+      ),
     );
   }
 
@@ -90,20 +104,22 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
         Positioned.fill(
           child: _buildTrayImage(maxWidth, maxHeight),
         ),
-        ..._cookieButtonList(maxWidth, maxHeight)
+        ..._cookieButtonList(maxWidth, maxHeight),
       ],
     );
   }
 
   List<Widget> _cookieButtonList(double maxWidth, double maxHeight) {
     final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: AppAssets.imgCookieCheering1),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: cookieImageDataList[0].trayCookie),
       CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, asset: AppAssets.imgCookieComfort1),
       CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, asset: AppAssets.imgCookiePassion1),
       CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, asset: AppAssets.imgCookieSermon1),
       CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, asset: AppAssets.imgCookieNormal1),
     ];
-    return cookieButtonDataList.map((btn) {
+    return cookieButtonDataList.asMap().entries.map((entry) {
+      final int index = entry.key;
+      final CookieButtonData btn = entry.value;
       return Positioned(
         top: btn.top,
         left: btn.left,
@@ -113,7 +129,9 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
           width: maxWidth * 0.3,
           height: maxHeight * 0.3,
           onPressed: () {
-            print("test");
+            setState(() {
+              _showOverlayImage = index;
+            });
           },
         ),
       );
@@ -125,6 +143,43 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
       width: imgWidth,
       height: imgHeight,
       child: Image.asset(AppAssets.imgTray, fit: BoxFit.contain),
+    );
+  }
+
+  Widget _openCookieUi(int index, double screenWidth, double screenHeight) {
+    if (index < 0 || index >= cookieImageDataList.length) {
+      return const SizedBox.shrink();
+    }
+
+    Widget showOpenCookieUi(){
+      return Center(child: Image.asset(
+        cookieImageDataList[index].catchCookie, width: screenWidth,
+        height: screenHeight,
+        fit: BoxFit.contain,),
+      );
+    }
+
+    Widget closeButton(){
+      return Positioned(
+        top: 24,
+        right: 24,
+        child: GestureDetector(
+          onTap: () {setState(() {_showOverlayImage = -1;});},
+          child: const Icon(Icons.close, size: 32, color: Colors.white),
+        ),
+      );
+    }
+
+    return Positioned.fill(
+        child: Container(
+          color: AppColor.translucentBackground,
+          child: Stack(
+            children: [
+              showOpenCookieUi(),
+              closeButton()
+            ],
+          ),
+        )
     );
   }
 }
