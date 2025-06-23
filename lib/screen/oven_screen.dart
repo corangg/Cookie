@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cookie/widgets/open_cookie_ui.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/widgets/custom_img_button.dart';
@@ -22,7 +25,7 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
         AppAssets.imgCookieCheering5, AppAssets.imgCookieCheering6)
   ];
 
-  int _showOverlayImage = -1;
+  int _typeOverlayImage = -1;
 
   @override
   void initState() {
@@ -52,7 +55,16 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
       body: Stack(
         children: [
           SafeArea(child: _buildBody(context)),
-          _openCookieUi(_showOverlayImage, screenWidth, screenHeight)
+          if(0 <= _typeOverlayImage && _typeOverlayImage < cookieImageDataList.length)
+            OpenCookieUI(openCookieUIData: OpenCookieUIData(
+                screenWidth,
+                screenHeight,
+                cookieImageDataList[_typeOverlayImage]), onClose: () {
+              setState(() {
+                _typeOverlayImage = -1;
+                // 깨진 이미지로 변경 해야함
+              });
+            })
         ],
       ),
     );
@@ -130,7 +142,7 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
           height: maxHeight * 0.3,
           onPressed: () {
             setState(() {
-              _showOverlayImage = index;
+              _typeOverlayImage = index;
             });
           },
         ),
@@ -143,43 +155,6 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
       width: imgWidth,
       height: imgHeight,
       child: Image.asset(AppAssets.imgTray, fit: BoxFit.contain),
-    );
-  }
-
-  Widget _openCookieUi(int index, double screenWidth, double screenHeight) {
-    if (index < 0 || index >= cookieImageDataList.length) {
-      return const SizedBox.shrink();
-    }
-
-    Widget showOpenCookieUi(){
-      return Center(child: Image.asset(
-        cookieImageDataList[index].catchCookie, width: screenWidth,
-        height: screenHeight,
-        fit: BoxFit.contain,),
-      );
-    }
-
-    Widget closeButton(){
-      return Positioned(
-        top: 24,
-        right: 24,
-        child: GestureDetector(
-          onTap: () {setState(() {_showOverlayImage = -1;});},
-          child: const Icon(Icons.close, size: 32, color: Colors.white),
-        ),
-      );
-    }
-
-    return Positioned.fill(
-        child: Container(
-          color: AppColor.translucentBackground,
-          child: Stack(
-            children: [
-              showOpenCookieUi(),
-              closeButton()
-            ],
-          ),
-        )
     );
   }
 }

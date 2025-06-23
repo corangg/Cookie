@@ -36,3 +36,15 @@ class CookieImageAssetsData {
     this.crushCookie,
   );
 }
+
+class OpenCookieUIData {
+  final double screenWidth;
+  final double screenHeight;
+  final CookieImageAssetsData cookieStateData;
+
+  const OpenCookieUIData(
+    this.screenWidth,
+    this.screenHeight,
+    this.cookieStateData,
+  );
+}
