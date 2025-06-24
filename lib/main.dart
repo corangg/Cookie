@@ -1,3 +1,4 @@
+import 'package:cookie/di/injection.dart';
 import 'package:cookie/screen/collection_screen.dart';
 import 'package:cookie/screen/oven_screen.dart';
 import 'package:cookie/screen/profile_screen.dart';
@@ -7,7 +8,9 @@ import 'package:core/widgets/custom_bottom_nav_bar.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 

@@ -12,5 +12,5 @@ class DefaultLocalDataSource implements LocalDataSource {
   Future<List<LocalCookieData>> getAllCookieData() => _db.getAllData();
 
   @override
-  Future<LocalCookieData?> getCookieData(DateTime date) => _db.getKeywordData(date);
+  Future<LocalCookieData?> getCookieData(DateTime date) => _db.getCookieData(date);
 }

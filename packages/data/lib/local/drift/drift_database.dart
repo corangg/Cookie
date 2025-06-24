@@ -2,15 +2,26 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'tables/cookie_data.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'tables/cookie_data_table.dart';
 
 part 'drift_database.g.dart';
 
 @DriftDatabase(tables: [CookieDataTable])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase(super.executor);
+
+  factory AppDatabase.open() {
+    return AppDatabase(
+      LazyDatabase(() async {
+        final dir = await getApplicationDocumentsDirectory();
+        final file = File(p.join(dir.path, 'cookie.sqlite'));
+        return NativeDatabase.createInBackground(file);
+      }),
+    );
+  }
 
   @override
   int get schemaVersion => 1;
@@ -23,22 +34,14 @@ class AppDatabase extends _$AppDatabase {
     return select(cookieDataTable).get();
   }
 
-  Future<LocalCookieData?> getKeywordData(DateTime targetDate) {
+  Future<LocalCookieData?> getCookieData(DateTime targetDate) {
     final normalized = DateTime(
       targetDate.year,
       targetDate.month,
       targetDate.day,
     );
-    return (select(cookieDataTable)
-      ..where((t) => t.date.equals(normalized)))
-        .getSingleOrNull();
+    return (select(
+      cookieDataTable,
+    )..where((t) => t.date.equals(normalized))).getSingleOrNull();
   }
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dir.path, 'cookie.sqlite'));
-    return NativeDatabase(file);
-  });
 }
