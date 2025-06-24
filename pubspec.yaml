@@ -43,6 +43,10 @@ dependencies:
   presentation:
     path: packages/presentation
 
+  drift: ^2.15.0
+  sqlite3_flutter_libs: ^0.5.15
+  path_provider: ^2.1.2
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -50,6 +54,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  drift_dev: ^2.15.0
+  build_runner: ^2.4.7
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -77,6 +84,11 @@ flutter:
     - assets/img/img_cookie_cheering_5.png
     - assets/img/img_cookie_cheering_6.png
     - assets/img/img_cookie_comfort_1.png
+    - assets/img/img_cookie_comfort_2.png
+    - assets/img/img_cookie_comfort_3.png
+    - assets/img/img_cookie_comfort_4.png
+    - assets/img/img_cookie_comfort_5.png
+    - assets/img/img_cookie_comfort_6.png
     - assets/img/img_cookie_passion_1.png
     - assets/img/img_cookie_sermon_1.png
   # The following line ensures that the Material Icons font is

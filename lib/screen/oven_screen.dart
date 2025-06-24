@@ -22,7 +22,11 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
     CookieImageAssetsData(
         AppAssets.imgCookieCheering1, AppAssets.imgCookieCheering2,
         AppAssets.imgCookieCheering3, AppAssets.imgCookieCheering4,
-        AppAssets.imgCookieCheering5, AppAssets.imgCookieCheering6)
+        AppAssets.imgCookieCheering5, AppAssets.imgCookieCheering6),
+    CookieImageAssetsData(
+        AppAssets.imgCookieComfort1, AppAssets.imgCookieComfort2,
+        AppAssets.imgCookieComfort3, AppAssets.imgCookieComfort4,
+        AppAssets.imgCookieComfort5, AppAssets.imgCookieComfort6),
   ];
 
   int _typeOverlayImage = -1;
@@ -123,12 +127,13 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
 
   List<Widget> _cookieButtonList(double maxWidth, double maxHeight) {
     final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, asset: cookieImageDataList[0].trayCookie),
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, asset: AppAssets.imgCookieComfort1),
-      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, asset: AppAssets.imgCookiePassion1),
-      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, asset: AppAssets.imgCookieSermon1),
-      CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, asset: AppAssets.imgCookieNormal1),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, isOpened: false),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, isOpened: false),
+      /*CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, isOpened: false),
+      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, isOpened: false),
+      CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, isOpened: false),*/
     ];
+
     return cookieButtonDataList.asMap().entries.map((entry) {
       final int index = entry.key;
       final CookieButtonData btn = entry.value;
@@ -136,7 +141,8 @@ class _OvenScreen extends State<OvenScreen> with SingleTickerProviderStateMixin 
         top: btn.top,
         left: btn.left,
         right: btn.right,
-        child: CustomImageButton(imgAssets: btn.asset,
+        child: CustomImageButton(
+          imgAssets: cookieImageDataList[index].openCookie,
           isOpened: false,
           width: maxWidth * 0.3,
           height: maxHeight * 0.3,
