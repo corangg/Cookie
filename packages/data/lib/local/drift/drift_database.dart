@@ -44,4 +44,12 @@ class AppDatabase extends _$AppDatabase {
       cookieDataTable,
     )..where((t) => t.date.equals(normalized))).getSingleOrNull();
   }
+
+  Stream<LocalCookieData?> getTodayCookieDataStream() {
+    final now = DateTime.now();
+    final norm = DateTime(now.year, now.month, now.day);
+    return (select(cookieDataTable)
+      ..where((t) => t.date.equals(norm)))
+        .watchSingleOrNull();
+  }
 }

@@ -4,4 +4,6 @@ abstract class Repository {
   Future<void> upsertCookieData(CookieData data);
 
   Future<CookieData?> getCookieData(String dateString);
+
+  Stream<CookieData?> getTodayCookieDataStream();
 }

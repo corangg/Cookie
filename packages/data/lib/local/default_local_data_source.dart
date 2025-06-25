@@ -13,4 +13,7 @@ class DefaultLocalDataSource implements LocalDataSource {
 
   @override
   Future<LocalCookieData?> getCookieData(DateTime date) => _db.getCookieData(date);
+
+  @override
+  Stream<LocalCookieData?> getTodayCookieDataStream() => _db.getTodayCookieDataStream();
 }

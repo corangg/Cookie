@@ -23,8 +23,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => GetCookieDataUseCase(sl()));
   sl.registerLazySingleton(() => UpsertCookieDataUseCase(sl()));
+  sl.registerLazySingleton(() => GetTodayCookieDataUseCase(sl()));
 
   sl.registerFactory(() => OvenScreenViewModel(
+    getTodayCookieDataUseCase: sl(),
     getUseCase: sl(),
     upsertUseCase: sl(),
   ));

@@ -1,8 +1,8 @@
 import 'package:core/util/util.dart';
 import 'package:data/data_source/local_data_source.dart';
+import 'package:data/mapper/mapper.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/repository/repository.dart';
-import 'package:data/mapper/mapper.dart';
 
 class DefaultRepository implements Repository {
   final LocalDataSource _ds;
@@ -19,5 +19,19 @@ class DefaultRepository implements Repository {
     final date = stringToDateTime(dateString);
     final localCookieData = await _ds.getCookieData(date);
     return localCookieData?.toDomain();
+  }
+
+  @override
+  Stream<CookieData?> getTodayCookieDataStream() {
+    return _ds.getTodayCookieDataStream().asyncMap((local) async {
+      if (local == null) {
+        final now = DateTime.now();
+        final date = DateTime(now.year, now.month, now.day);
+        final todayCookieData = CookieData(date, false, -1, false, -1, false, -1, false, -1, false, -1);
+        await upsertCookieData(todayCookieData);
+        return todayCookieData;
+      }
+      return local.toDomain();
+    });
   }
 }

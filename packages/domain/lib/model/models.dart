@@ -76,4 +76,16 @@ class CookieData {
     this.isRandomsOpened,
     this.randomNo,
   );
+  factory CookieData.empty() {
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day);
+    return CookieData(
+      midnight,
+      false, -1,
+      false, -1,
+      false, -1,
+      false, -1,
+      false, -1,
+    );
+  }
 }

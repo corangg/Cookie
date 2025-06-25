@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class CustomImageButton extends StatefulWidget {
   final String imgAssets;
-  final bool isOpened;
   final double width;
   final double height;
   final VoidCallback? onPressed;
@@ -10,7 +9,6 @@ class CustomImageButton extends StatefulWidget {
   const CustomImageButton({
     super.key,
     required this.imgAssets,
-    required this.isOpened,
     required this.width,
     required this.height,
     this.onPressed,

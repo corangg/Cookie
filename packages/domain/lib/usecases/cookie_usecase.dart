@@ -18,3 +18,12 @@ class UpsertCookieDataUseCase {
     return _repo.upsertCookieData(data);
   }
 }
+
+class GetTodayCookieDataUseCase {
+  final Repository _repo;
+  GetTodayCookieDataUseCase(this._repo);
+
+  Stream<CookieData> call(){
+    return _repo.getTodayCookieDataStream().map((cookie) => cookie ?? CookieData.empty());
+  }
+}
