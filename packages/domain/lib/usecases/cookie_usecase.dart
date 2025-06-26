@@ -5,8 +5,8 @@ class GetCookieDataUseCase {
   final Repository _repo;
   GetCookieDataUseCase(this._repo);
 
-  Future<CookieData?> call(String dateString) {
-    return _repo.getCookieData(dateString);
+  Future<CookieData> call(String dateString) async {
+    return (await _repo.getCookieData(dateString)) ?? CookieData.empty();
   }
 }
 

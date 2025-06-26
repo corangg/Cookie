@@ -46,7 +46,8 @@ class OvenScreenViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      cookie = await getUseCase.call(dateString);
+       cookie = await getUseCase.call(dateString);
+       error = null;
     } catch (e) {
       error = '불러오기 실패: $e';
     } finally {
