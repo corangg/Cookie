@@ -92,29 +92,29 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
                 if (vm.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                return _buildBody(
-                  context,
-                  screenWidth,
-                  screenHeight,
-                  vm.cookie,
+                return Stack(
+                  children: [
+                    _buildBody(context, screenWidth, screenHeight, vm.cookie),
+                    if (0 <= _typeOverlayImage && _typeOverlayImage < cookieImageDataList.length)
+                      OpenCookieUI(
+                        openCookieUIData: OpenCookieUIData(
+                          screenWidth,
+                          screenHeight,
+                          cookieImageDataList[_typeOverlayImage],
+                        ),
+                        cookieInfo: vm.cookie.infos[_typeOverlayImage],
+                        onClose: () {
+                          setState(() {
+                            _typeOverlayImage = -1;
+                            // 깨진 이미지로 변경 해야함
+                          });
+                        },
+                      )
+                  ],
                 );
               },
             ),
-            if (0 <= _typeOverlayImage &&
-                _typeOverlayImage < cookieImageDataList.length)
-              OpenCookieUI(
-                openCookieUIData: OpenCookieUIData(
-                  screenWidth,
-                  screenHeight,
-                  cookieImageDataList[_typeOverlayImage],
-                ),
-                onClose: () {
-                  setState(() {
-                    _typeOverlayImage = -1;
-                    // 깨진 이미지로 변경 해야함
-                  });
-                },
-              ),
+
           ],
         ),
       ),
@@ -183,16 +183,24 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
     double maxHeight,
     CookieData cookieData,
   ) {
+    bool isOpenedFor(CookieType t) {
+      final info = cookieData.infos.firstWhere(
+            (i) => i.type.runtimeType == t.runtimeType,
+        orElse: () => DateCookieInfo(type: t, isOpened: false, no: -1),
+      );
+      return info.isOpened;
+    }
+
     final List<CookieButtonData> cookieButtonDataList = [
       CookieButtonData(
         top: maxHeight * 0.15,
         left: maxWidth * 0.15,
-        isOpened: cookieData.isCheeringOpened,
+        isOpened: isOpenedFor(const CookieType.cheering()),
       ),
       CookieButtonData(
         top: maxHeight * 0.15,
         left: maxWidth * 0.55,
-        isOpened: cookieData.isComportOpened,
+        isOpened: isOpenedFor(const CookieType.comfort()),
       ),
       /*  CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, isOpened: cookieData.isPassionOpened),
       CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, isOpened: cookieData.isSermonOpened),
