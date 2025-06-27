@@ -5,4 +5,7 @@ class AppStrings {
   static const labelBottomNavigationBarOven = 'oven';
   static const labelBottomNavigationBarCollection = 'collection';
   static const labelBottomNavigationBarProfile = 'profile';
+
+  //button
+  static const buttonOk = '확인';
 }
