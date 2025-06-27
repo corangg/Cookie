@@ -5,7 +5,9 @@ import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'tables/drift_entity.dart';
 import 'tables/cookie_data_table.dart';
+import 'converter/cookie_data_converter.dart';
 
 part 'drift_database.g.dart';
 

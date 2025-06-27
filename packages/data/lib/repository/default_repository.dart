@@ -18,20 +18,18 @@ class DefaultRepository implements Repository {
   Future<CookieData?> getCookieData(String dateString) async {
     final date = stringToDateTime(dateString);
     final localCookieData = await _ds.getCookieData(date);
-    return localCookieData?.toDomain();
+    return localCookieData?.toExternal();
   }
 
   @override
   Stream<CookieData?> getTodayCookieDataStream() {
     return _ds.getTodayCookieDataStream().asyncMap((local) async {
       if (local == null) {
-        final now = DateTime.now();
-        final date = DateTime(now.year, now.month, now.day);
-        final todayCookieData = CookieData(date, false, -1, false, -1, false, -1, false, -1, false, -1);
+        final todayCookieData = CookieData.empty();
         await upsertCookieData(todayCookieData);
         return todayCookieData;
       }
-      return local.toDomain();
+      return local.toExternal();
     });
   }
 }

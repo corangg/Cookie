@@ -50,7 +50,69 @@ class OpenCookieUIData {
   );
 }
 
+class DateCookieInfo {
+  final CookieType type;
+  final bool isOpened;
+  final int no;
+
+  const DateCookieInfo({
+    required this.type,
+    required this.isOpened,
+    required this.no,
+  });
+}
+
 class CookieData {
+  final DateTime date;
+  final List<DateCookieInfo> infos;
+
+  const CookieData({required this.date, required this.infos});
+
+  factory CookieData.empty() {
+    final now = DateTime.now();
+    final yyyyMMDD = DateTime(now.year, now.month, now.day);
+
+    return CookieData(
+      date: yyyyMMDD,
+      infos: const [
+        DateCookieInfo(type: CookieType.cheering(), isOpened: false, no: -1),
+        DateCookieInfo(type: CookieType.comfort(), isOpened: false, no: -1),
+        DateCookieInfo(type: CookieType.passion(), isOpened: false, no: -1),
+        DateCookieInfo(type: CookieType.sermon(), isOpened: false, no: -1),
+        DateCookieInfo(type: CookieType.random(), isOpened: false, no: -1),
+      ],
+    );
+  }
+}
+
+sealed class CookieType {
+  final int code;
+  const CookieType(this.code);
+
+  const factory CookieType.cheering() =  CookieTypeCheering;
+  const factory CookieType.comfort() =  CookieTypeComfort;
+  const factory CookieType.passion() =  CookieTypePassion;
+  const factory CookieType.sermon() =  CookieTypeSermon;
+  const factory CookieType.random() =  CookieTypeRandom;
+}
+
+final class CookieTypeCheering extends CookieType {
+  const CookieTypeCheering(): super(1);
+}
+final class CookieTypeComfort extends CookieType {
+  const CookieTypeComfort(): super(2);
+}
+final class CookieTypePassion extends CookieType {
+  const CookieTypePassion(): super(3);
+}
+final class CookieTypeSermon extends CookieType {
+  const CookieTypeSermon(): super(4);
+}
+final class CookieTypeRandom extends CookieType {
+  const CookieTypeRandom(): super(5);
+}
+
+/*class CookieData {
   final DateTime date;
   final bool isCheeringOpened;
   final int cheeringNo;
@@ -88,4 +150,4 @@ class CookieData {
       false, -1,
     );
   }
-}
+}*/
