@@ -94,6 +94,17 @@ sealed class CookieType {
   const factory CookieType.passion() =  CookieTypePassion;
   const factory CookieType.sermon() =  CookieTypeSermon;
   const factory CookieType.random() =  CookieTypeRandom;
+
+  static CookieType fromCode(int code) {
+    return switch (code) {
+      1 => const CookieType.cheering(),
+      2 => const CookieType.comfort(),
+      3 => const CookieType.passion(),
+      4 => const CookieType.sermon(),
+      5 => const CookieType.random(),
+      _ => throw ArgumentError('알 수 없는 CookieType 코드: $code'),
+    };
+  }
 }
 
 final class CookieTypeCheering extends CookieType {
