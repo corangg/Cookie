@@ -74,6 +74,7 @@ flutter:
     - assets/icons/ic_collection.png
     - assets/icons/ic_profile.png
     - assets/img/img_oven_tray.png
+    - assets/img/img_cookie_disable.png
     - assets/img/img_cookie_normal_1.png
     - assets/img/img_cookie_cheering_1.png
     - assets/img/img_cookie_cheering_2.png
