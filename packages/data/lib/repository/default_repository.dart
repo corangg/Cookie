@@ -32,4 +32,23 @@ class DefaultRepository implements Repository {
       return local.toExternal();
     });
   }
+
+  @override
+  Future<void> upsertCollectionData(CollectionData data) async {
+    final localData = data.toLocal();
+    await _ds.upsertCollectionData(localData);
+  }
+
+  @override
+  Future<List<CollectionData>> getCollectionData(int type) async {
+    final localCollectionData = await _ds.getCollectionData(type);
+    return localCollectionData.map((e) => e.toExternal()).toList();
+  }
+
+  @override
+  Stream<List<CollectionData>> getCollectionDataStream() {
+    return _ds.getCollectionDataStream().asyncMap((local) async {
+      return local.map((e) => e.toExternal()).toList();
+    });
+  }
 }

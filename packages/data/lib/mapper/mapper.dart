@@ -42,3 +42,24 @@ extension CookieDataToExternal on LocalCookieData {
     return CookieData(date: date, infos: infos);
   }
 }
+
+extension CollectionDataToLocal on CollectionData {
+  LocalCollectionData toLocal() {
+    return LocalCollectionData(type: type.code, no: no, date: date);
+  }
+}
+
+extension CollectionDataToExternal on LocalCollectionData {
+  CollectionData toExternal() {
+    final cookieType = switch (type) {
+      1 => const CookieType.cheering(),
+      2 => const CookieType.comfort(),
+      3 => const CookieType.passion(),
+      4 => const CookieType.sermon(),
+      5 => const CookieType.random(),
+      _ => throw ArgumentError('알 수 없는 CookieType 코드: $type'),
+    };
+
+    return CollectionData(type: cookieType, no: no, date: date);
+  }
+}

@@ -70,6 +70,7 @@ class OvenScreenViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> updateDateCookieInfo(DateCookieInfo info) async {
     info.isOpened;
     1;

@@ -7,11 +7,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'tables/drift_entity.dart';
 import 'tables/cookie_data_table.dart';
+import 'tables/collection_data_table.dart';
 import 'converter/cookie_data_converter.dart';
 
 part 'drift_database.g.dart';
 
-@DriftDatabase(tables: [CookieDataTable])
+@DriftDatabase(tables: [CookieDataTable, CollectionDataTable])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
@@ -26,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   Future<void> upsertCookie(LocalCookieData entry) {
     return into(cookieDataTable).insertOnConflictUpdate(entry);
@@ -53,5 +54,19 @@ class AppDatabase extends _$AppDatabase {
     return (select(cookieDataTable)
       ..where((t) => t.date.equals(norm)))
         .watchSingleOrNull();
+  }
+
+  Future<void> upsertCollection(LocalCollectionData entry) {
+    return into(collectionDataTable).insertOnConflictUpdate(entry);
+  }
+
+  Future<List<LocalCollectionData>> getCollectionData(int targetType) {
+    return (select(collectionDataTable)
+      ..where((tbl) => tbl.type.equals(targetType)))
+        .get();
+  }
+
+  Stream<List<LocalCollectionData>> getCollectionDataStream() {
+    return select(collectionDataTable).watch();
   }
 }

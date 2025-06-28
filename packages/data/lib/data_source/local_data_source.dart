@@ -5,4 +5,8 @@ abstract class LocalDataSource {
   Future<List<LocalCookieData>> getAllCookieData();
   Future<LocalCookieData?> getCookieData(DateTime date);
   Stream<LocalCookieData?> getTodayCookieDataStream();
+
+  Future<void> upsertCollectionData(LocalCollectionData data);
+  Future<List<LocalCollectionData>> getCollectionData(int targetType);
+  Stream<List<LocalCollectionData>> getCollectionDataStream();
 }

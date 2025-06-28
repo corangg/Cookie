@@ -112,42 +112,14 @@ final class CookieTypeRandom extends CookieType {
   const CookieTypeRandom(): super(5);
 }
 
-/*class CookieData {
+class CollectionData {
+  final CookieType type;
+  final int no;
   final DateTime date;
-  final bool isCheeringOpened;
-  final int cheeringNo;
-  final bool isComportOpened;
-  final int comportNo;
-  final bool isPassionOpened;
-  final int passionNo;
-  final bool isSermonOpened;
-  final int sermonNo;
-  final bool isRandomsOpened;
-  final int randomNo;
 
-  const CookieData(
-    this.date,
-    this.isCheeringOpened,
-    this.cheeringNo,
-    this.isComportOpened,
-    this.comportNo,
-    this.isPassionOpened,
-    this.passionNo,
-    this.isSermonOpened,
-    this.sermonNo,
-    this.isRandomsOpened,
-    this.randomNo,
-  );
-  factory CookieData.empty() {
-    final now = DateTime.now();
-    final midnight = DateTime(now.year, now.month, now.day);
-    return CookieData(
-      midnight,
-      false, -1,
-      false, -1,
-      false, -1,
-      false, -1,
-      false, -1,
-    );
-  }
-}*/
+  const CollectionData({
+    required this.type,
+    required this.no,
+    required this.date,
+  });
+}
