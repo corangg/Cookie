@@ -3,6 +3,7 @@ import 'package:cookie/viewmodel/oven_screen_view_model.dart';
 import 'package:cookie/widgets/open_cookie_ui.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_string.dart';
 import 'package:core/widgets/custom_img_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
@@ -78,45 +79,18 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: AppColor.mainBackground,
       appBar: _buildAppBar(),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Consumer<OvenScreenViewModel>(
+          child: Consumer<OvenScreenViewModel>(
               builder: (_, vm, _) {
                 if (vm.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                return Stack(
-                  children: [
-                    _buildBody(context, screenWidth, screenHeight, vm.cookie),
-                    if (0 <= _typeOverlayImage && _typeOverlayImage < cookieImageDataList.length)
-                      OpenCookieUI(
-                        openCookieUIData: OpenCookieUIData(
-                          screenWidth,
-                          screenHeight,
-                          cookieImageDataList[_typeOverlayImage],
-                        ),
-                        cookieInfo: vm.cookie.infos[_typeOverlayImage],
-                        onClose: () {
-                          setState(() {
-                            _typeOverlayImage = -1;
-                            // 깨진 이미지로 변경 해야함
-                          });
-                        },
-                      )
-                  ],
-                );
-              },
-            ),
-
-          ],
-        ),
+                return _buildBody();
+              }
+          )
       ),
     );
   }
@@ -137,8 +111,25 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
     );
   }
 
-  Widget _buildBody(
-    BuildContext context,
+  Widget _buildBody() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Stack(children: [
+      _buildAnimatedContent(screenWidth, screenHeight, viewModel.cookie),
+      if (0 <= _typeOverlayImage && _typeOverlayImage < cookieImageDataList.length)
+        OpenCookieUI(openCookieUIData: OpenCookieUIData(
+          screenWidth,
+          screenHeight,
+          cookieImageDataList[_typeOverlayImage],
+        ), cookieInfo: viewModel.cookie.infos[_typeOverlayImage], onClose: () {
+          setState(() {
+            _typeOverlayImage = -1;
+          });
+        })
+    ]);
+  }
+
+  Widget _buildAnimatedContent(
     double screenWidth,
     double screenHeight,
     CookieData cookieData,
@@ -151,20 +142,9 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
         child: SizedBox(
           width: maxWidth,
           height: maxHeight,
-          child: _buildAnimatedContent(maxWidth, maxHeight, cookieData),
+          child: SlideTransition(position: _offsetAnimation, child: _ui(maxWidth, maxHeight, cookieData))
         ),
       ),
-    );
-  }
-
-  Widget _buildAnimatedContent(
-    double maxWidth,
-    double maxHeight,
-    CookieData cookieData,
-  ) {
-    return SlideTransition(
-      position: _offsetAnimation,
-      child: _ui(maxWidth, maxHeight, cookieData),
     );
   }
 
@@ -192,16 +172,8 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
     }
 
     final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(
-        top: maxHeight * 0.15,
-        left: maxWidth * 0.15,
-        isOpened: isOpenedFor(const CookieType.cheering()),
-      ),
-      CookieButtonData(
-        top: maxHeight * 0.15,
-        left: maxWidth * 0.55,
-        isOpened: isOpenedFor(const CookieType.comfort()),
-      ),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, isOpened: isOpenedFor(const CookieType.cheering()),),
+      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, isOpened: isOpenedFor(const CookieType.comfort()),),
       /*  CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, isOpened: cookieData.isPassionOpened),
       CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, isOpened: cookieData.isSermonOpened),
       CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, isOpened: cookieData.isRandomsOpened),*/
@@ -213,6 +185,17 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
       } else {
         return cookieImageDataList[index].trayCookie;
       }
+    }
+
+    showAllCollectionMessage() {
+      return SnackBar(
+        content: const Text(AppStrings.allCollectionMessage, textAlign: TextAlign.center, style: TextStyle(color: AppColor.mainButtonBorder),),
+        backgroundColor: AppColor.mainButtonBackground,
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(
+            horizontal: 85, vertical: 8),
+      );
     }
 
     return cookieButtonDataList.asMap().entries.map((entry) {
@@ -227,9 +210,16 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
           width: maxWidth * 0.3,
           height: maxHeight * 0.3,
           onPressed: () {
-            setState(() {
-              _typeOverlayImage = index;
-            });
+            viewModel.generateNewCookieNo(CookieType.fromCode(index + 1));
+            if (viewModel.newCookieNo == -1) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  showAllCollectionMessage()
+              );
+            } else {
+              setState(() {
+                _typeOverlayImage = index;
+              });
+            }
           },
         ),
       );

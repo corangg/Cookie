@@ -11,8 +11,7 @@ class CreateNewCollectionNoUseCase {
   Future<int> call(CookieType type, int maxNo) async {
     final collection = await _repo.getCollectionData(type.code);
     final collectionNoListSet = collection.map((e) => e.no).toList().toSet();
-    final newCollectionNoList = List.generate(maxNo, (i) => i + 1).where((
-        n) => !collectionNoListSet.contains(n)).toList();
+    final newCollectionNoList = List.generate(maxNo, (i) => i + 1).where((n) => !collectionNoListSet.contains(n)).toList();
 
     if (newCollectionNoList.isNotEmpty) {
       final idx = Random().nextInt(newCollectionNoList.length);

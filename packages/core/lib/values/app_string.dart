@@ -8,4 +8,7 @@ class AppStrings {
 
   //button
   static const buttonOk = '확인';
+
+  //message
+  static const allCollectionMessage = '모든 쿠키를 수집 했어요!';
 }

@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:core/values/app_size.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:domain/usecases/cookie_usecase.dart';
+import 'package:flutter/cupertino.dart';
 
 class OvenScreenViewModel extends ChangeNotifier {
   final GetCookieDataUseCase getUseCase;
@@ -15,6 +16,9 @@ class OvenScreenViewModel extends ChangeNotifier {
   CookieData cookie;
   bool isLoading = false;
   String? error;
+
+  int? _newCookieNo;
+  int? get newCookieNo => _newCookieNo;
 
   OvenScreenViewModel({
     required this.getUseCase,
@@ -77,6 +81,18 @@ class OvenScreenViewModel extends ChangeNotifier {
   Future<void> updateDateCookieInfo(DateCookieInfo info) async {
     info.isOpened;
     1;
+  }
+
+  Future<void> generateNewCookieNo(CookieType type) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final no = await createNewCollectionNoUseCase(type, AppSize.collectionMaxNo);
+      _newCookieNo = no;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   @override
