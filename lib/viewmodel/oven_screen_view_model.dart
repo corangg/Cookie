@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:domain/model/models.dart';
+import 'package:domain/usecases/collection_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:domain/usecases/cookie_usecase.dart';
 
@@ -8,6 +9,7 @@ class OvenScreenViewModel extends ChangeNotifier {
   final GetCookieDataUseCase getUseCase;
   final UpsertCookieDataUseCase upsertUseCase;
   final GetTodayCookieDataUseCase getTodayCookieDataUseCase;
+  final CreateNewCollectionNoUseCase createNewCollectionNoUseCase;
   StreamSubscription<CookieData>? _todaySub;
 
   CookieData cookie;
@@ -18,6 +20,7 @@ class OvenScreenViewModel extends ChangeNotifier {
     required this.getUseCase,
     required this.upsertUseCase,
     required this.getTodayCookieDataUseCase,
+    required this.createNewCollectionNoUseCase
   }) : cookie = CookieData.empty() {
     _startTodayListener();
   }
