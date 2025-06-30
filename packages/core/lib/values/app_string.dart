@@ -21,12 +21,17 @@ class AppStrings {
       3 => AppStrings.passionCollectionList,
       4 => AppStrings.sermonCollectionList,
       5 => AppStrings.cheeringCollectionList,
-      _ => throw throw ArgumentError('알 수 없는 CookieType: $type'),
+      _ => throw ArgumentError('알 수 없는 CookieType: $type'),
     };
   }
 
   static List<String> cheeringCollectionList = [
-    'test1',
+    'cheeringTest1',
+    'cheeringTest2',
+    'cheeringTest3',
+    'cheeringTest4',
+    'cheeringTest5',
+    'cheeringTest6',
   ];
 
   static List<String> comfortCollectionList = [

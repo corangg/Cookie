@@ -181,7 +181,7 @@ class _OpenCookieUI extends State<OpenCookieUI> {
         if (_animIndex >= _openCookieImages.length - 1) {
           _isOpened = true;
           timer.cancel();
-          vm.updateDateCookieInfo(widget.cookieInfo);
+          vm.updateDateCookieInfo(widget.cookieInfo.type);
         }
       });
     });

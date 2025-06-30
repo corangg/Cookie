@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:core/util/util.dart';
-import 'package:core/values/app_size.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
 import 'package:domain/usecases/cookie_usecase.dart';
@@ -9,7 +8,8 @@ import 'package:flutter/cupertino.dart';
 
 class OvenScreenViewModel extends ChangeNotifier {
   final GetCookieDataUseCase getUseCase;
-  final UpsertCookieDataUseCase upsertUseCase;
+  final UpsertCookieDataUseCase upsertCookieDataUseCase;
+  final UpdateOpenCookieDataUseCase updateOpenCookieDataUseCase;
   final GetTodayCookieDataUseCase getTodayCookieDataUseCase;
   final CreateNewCollectionNoUseCase createNewCollectionNoUseCase;
   final UpsertCollectionUseCase upsertCollectionUseCase;
@@ -24,7 +24,8 @@ class OvenScreenViewModel extends ChangeNotifier {
 
   OvenScreenViewModel({
     required this.getUseCase,
-    required this.upsertUseCase,
+    required this.upsertCookieDataUseCase,
+    required this.updateOpenCookieDataUseCase,
     required this.getTodayCookieDataUseCase,
     required this.createNewCollectionNoUseCase,
     required this.upsertCollectionUseCase
@@ -56,7 +57,7 @@ class OvenScreenViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-       cookie = await getUseCase.call(dateString);
+       //cookie = await getUseCase.call(dateString);
        error = null;
     } catch (e) {
       error = '불러오기 실패: $e';
@@ -71,7 +72,7 @@ class OvenScreenViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await upsertUseCase.call(data);
+      await upsertCookieDataUseCase.call(data);
       cookie = data;
     } catch (e) {
       error = '저장 실패: $e';
@@ -81,10 +82,20 @@ class OvenScreenViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateDateCookieInfo(DateCookieInfo info) async {
-    //newCode 와 타입, date, isOpened 를 업데이트
-    info.isOpened;
-    1;
+  Future<void> updateDateCookieInfo(CookieType type) async {
+    isLoading = true;
+    notifyListeners();
+
+    final cookieInfo = DateCookieInfo(type: type, isOpened: true, no: newCookieNo ?? -1);
+
+    try {
+      updateOpenCookieDataUseCase.call(cookieInfo);
+    } catch (e) {
+      error = '생성 실패: $e';
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> testUpsertCollection() async {

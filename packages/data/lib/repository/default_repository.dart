@@ -15,8 +15,7 @@ class DefaultRepository implements Repository {
   }
 
   @override
-  Future<CookieData?> getCookieData(String dateString) async {
-    final date = stringToDateTime(dateString);
+  Future<CookieData?> getCookieData(DateTime date) async {
     final localCookieData = await _ds.getCookieData(date);
     return localCookieData?.toExternal();
   }

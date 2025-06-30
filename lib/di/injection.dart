@@ -23,6 +23,7 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => GetCookieDataUseCase(sl()));
   sl.registerLazySingleton(() => UpsertCookieDataUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateOpenCookieDataUseCase(sl()));
   sl.registerLazySingleton(() => GetTodayCookieDataUseCase(sl()));
 
   sl.registerLazySingleton(() => CreateNewCollectionNoUseCase(sl()));
@@ -31,8 +32,9 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => OvenScreenViewModel(
     getTodayCookieDataUseCase: sl(),
     getUseCase: sl(),
-    upsertUseCase: sl(),
+    upsertCookieDataUseCase: sl(),
     createNewCollectionNoUseCase: sl(),
-    upsertCollectionUseCase: sl()
+    upsertCollectionUseCase: sl(),
+    updateOpenCookieDataUseCase: sl(),
   ));
 }
