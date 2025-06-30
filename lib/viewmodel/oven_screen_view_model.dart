@@ -37,9 +37,7 @@ class OvenScreenViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    _todaySub = getTodayCookieDataUseCase.call().listen(
-          (data) {
-        // data is guaranteed non-null
+    _todaySub = getTodayCookieDataUseCase.call().listen((data) {
         cookie = data;
         isLoading = false;
         notifyListeners();
@@ -52,36 +50,6 @@ class OvenScreenViewModel extends ChangeNotifier {
     );
   }
 
-  Future<void> load(String dateString) async {
-    isLoading = true;
-    notifyListeners();
-
-    try {
-       //cookie = await getUseCase.call(dateString);
-       error = null;
-    } catch (e) {
-      error = '불러오기 실패: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> save(CookieData data) async {
-    isLoading = true;
-    notifyListeners();
-
-    try {
-      await upsertCookieDataUseCase.call(data);
-      cookie = data;
-    } catch (e) {
-      error = '저장 실패: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
   Future<void> updateDateCookieInfo(CookieType type) async {
     isLoading = true;
     notifyListeners();
@@ -91,19 +59,7 @@ class OvenScreenViewModel extends ChangeNotifier {
     try {
       updateOpenCookieDataUseCase.call(cookieInfo);
     } catch (e) {
-      error = '생성 실패: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> testUpsertCollection() async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      CollectionData data = CollectionData(type: CookieType.random(), no: -1, date: createTodayDate());
-      await upsertCollectionUseCase.call(data);
+      error = '업데이트 실패: $e';
     } finally {
       isLoading = false;
       notifyListeners();
