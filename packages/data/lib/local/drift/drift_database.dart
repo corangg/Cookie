@@ -29,6 +29,15 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 2;
 
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.createTable(collectionDataTable);
+      }
+    },
+  );
+
   Future<void> upsertCookie(LocalCookieData entry) {
     return into(cookieDataTable).insertOnConflictUpdate(entry);
   }
@@ -61,9 +70,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<LocalCollectionData>> getCollectionData(int targetType) {
-    return (select(collectionDataTable)
-      ..where((tbl) => tbl.type.equals(targetType)))
-        .get();
+    return (select(collectionDataTable)..where((tbl) => tbl.type.equals(targetType))).get();
   }
 
   Stream<List<LocalCollectionData>> getCollectionDataStream() {
