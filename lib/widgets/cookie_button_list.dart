@@ -43,7 +43,7 @@ class _CookieButtonList extends State<CookieButtonList>{
         final index = entry.key;
         final btn = entry.value;
         final imgAsset = btn.isOpened
-            ? widget.cookieImageDataList[index].openCookie
+            ? widget.cookieImageDataList[index].crushCookie
             : widget.cookieImageDataList[index].trayCookie;
         return Positioned(
             top: btn.top,
