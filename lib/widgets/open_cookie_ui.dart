@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
+import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_size.dart';
 import 'package:core/values/app_string.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,7 @@ class _OpenCookieUI extends State<OpenCookieUI> {
     widget.openCookieUIData.cookieStateData.openCookie,
   ];
 
+
   @override
   void initState() {
     _isOpened = widget.cookieInfo.isOpened;
@@ -62,9 +65,7 @@ class _OpenCookieUI extends State<OpenCookieUI> {
 
   @override
   Widget build(BuildContext context) {
-    //final isOpened = widget.cookieInfo.isOpened;
-
-    return Positioned.fill(
+   return Positioned.fill(
         child: Container(
           color: AppColor.translucentBackground,
           child: _isOpened ? _buildOpenedView() : _buildPreOpenView()
@@ -81,9 +82,42 @@ class _OpenCookieUI extends State<OpenCookieUI> {
           height: widget.openCookieUIData.screenHeight,
           fit: BoxFit.contain,
         )),
+        Align(
+          alignment: const Alignment(0, -0.6),
+          child: _messageView(),
+        ),
         _closeButton(),
         _showOkButton()
       ],
+    );
+  }
+  Widget _messageView() {
+    final no = vm.newCookieNo;
+    final list = AppStrings.getCookieMessageList(widget.cookieInfo.type.code);
+    final message = (no == null || no >= list.length) ? AppStrings.errorCookieMessage : list[no];
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: widget.openCookieUIData.screenWidth * 1,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppAssets.imgMessagePaper),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSize.cookieMessagePadding,
+            vertical: AppSize.cookieMessagePadding,
+          ),
+          child: Text(
+            message,//
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 
@@ -124,7 +158,7 @@ class _OpenCookieUI extends State<OpenCookieUI> {
       final dx1 = pts[0].dx - (_firstPointerStart?.dx ?? 0);
       final dx2 = (_secondPointerStart?.dx ?? 0) - pts[1].dx;
 
-      if (dx1 > 50 && dx2 > 50) {
+      if (dx1 > 30 && dx2 > 30) {
         _startOpenAnimation();
         _activePointers.clear();
       }
@@ -190,14 +224,3 @@ class _OpenCookieUI extends State<OpenCookieUI> {
     );
   }
 }
-
-/*
-* 1. 실행
-* 2. isOpened 체크
-* 3-1. 들고있는 이미지 출력
-* 3-2. 모션 동작 시 에니메이션(1초마다 바뀌는 사진) 시작
-* 3-3. 열린 모션 보여주기// 랜덤숫자 넣는 함수
-* 3-4. 확인 버튼 출력
-* 2-2. 바로 3-3, 3-4 출력
-*
-* */

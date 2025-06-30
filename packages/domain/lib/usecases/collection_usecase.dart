@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:domain/model/models.dart';
@@ -15,9 +16,18 @@ class CreateNewCollectionNoUseCase {
 
     if (newCollectionNoList.isNotEmpty) {
       final idx = Random().nextInt(newCollectionNoList.length);
-      return newCollectionNoList[idx];
+      return newCollectionNoList[idx] -1;
     } else {
       return -1;
     }
+  }
+}
+
+class  UpsertCollectionUseCase {
+  final Repository _repo;
+  UpsertCollectionUseCase(this._repo);
+
+  Future<void> call(CollectionData data) {
+    return _repo.upsertCollectionData(data);
   }
 }

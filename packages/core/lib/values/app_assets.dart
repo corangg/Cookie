@@ -4,6 +4,7 @@ class AppAssets {
   static const icProfile = 'assets/icons/ic_profile.png';
 
   static const imgTray = 'assets/img/img_oven_tray.png';
+  static const imgMessagePaper = 'assets/img/img_message_paper.png';
   static const imgCookieNormal1 = 'assets/img/img_cookie_normal_1.png';
   static const imgCookieCheering1 = 'assets/img/img_cookie_cheering_1.png';
   static const imgCookieCheering2 = 'assets/img/img_cookie_cheering_2.png';

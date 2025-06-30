@@ -11,4 +11,33 @@ class AppStrings {
 
   //message
   static const allCollectionMessage = '모든 쿠키를 수집 했어요!';
+  static const errorCookieMessage = '죄송합니다. 오류가 발생했어요';
+
+
+  static List<String> getCookieMessageList(int type) {
+    return switch (type){
+      1 => AppStrings.cheeringCollectionList,
+      2 => AppStrings.comfortCollectionList,
+      3 => AppStrings.passionCollectionList,
+      4 => AppStrings.sermonCollectionList,
+      5 => AppStrings.cheeringCollectionList,
+      _ => throw throw ArgumentError('알 수 없는 CookieType: $type'),
+    };
+  }
+
+  static List<String> cheeringCollectionList = [
+    'test1',
+  ];
+
+  static List<String> comfortCollectionList = [
+    'test2',
+  ];
+
+  static List<String> passionCollectionList = [
+    'test3',
+  ];
+
+  static List<String> sermonCollectionList = [
+    'test4',
+  ];
 }

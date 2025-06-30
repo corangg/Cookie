@@ -4,3 +4,8 @@ DateTime stringToDateTime(String dateString) {
   final day = int.parse(dateString.substring(6, 8));
   return DateTime(year, month, day);
 }
+
+DateTime createTodayDate() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day);
+}

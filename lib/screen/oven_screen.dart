@@ -1,10 +1,9 @@
 import 'package:cookie/di/injection.dart';
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
+import 'package:cookie/widgets/cookie_button_list.dart';
 import 'package:cookie/widgets/open_cookie_ui.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
-import 'package:core/values/app_string.dart';
-import 'package:core/widgets/custom_img_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +34,7 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
 
   late final OvenScreenViewModel viewModel;
 
-  int _typeOverlayImage = -1;
+  int _selectCookieType = -1;
 
   final List<CookieImageAssetsData> cookieImageDataList = [
     CookieImageAssetsData(
@@ -115,24 +114,22 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Stack(children: [
-      _buildAnimatedContent(screenWidth, screenHeight, viewModel.cookie),
-      if (0 <= _typeOverlayImage && _typeOverlayImage < cookieImageDataList.length)
-        OpenCookieUI(openCookieUIData: OpenCookieUIData(
-          screenWidth,
-          screenHeight,
-          cookieImageDataList[_typeOverlayImage],
-        ), cookieInfo: viewModel.cookie.infos[_typeOverlayImage], onClose: () {
-          setState(() {
-            _typeOverlayImage = -1;
-          });
-        })
+      _buildAnimatedContent(screenWidth, screenHeight),
+      if (0 <= _selectCookieType && _selectCookieType < cookieImageDataList.length)
+        OpenCookieUI(
+            openCookieUIData: OpenCookieUIData(screenWidth, screenHeight, cookieImageDataList[_selectCookieType],),
+            cookieInfo: viewModel.cookie.infos[_selectCookieType],
+            onClose: () {
+              setState(() {
+                _selectCookieType = -1;
+              });
+            })
     ]);
   }
 
   Widget _buildAnimatedContent(
     double screenWidth,
-    double screenHeight,
-    CookieData cookieData,
+    double screenHeight
   ) {
     final double maxWidth = screenWidth * 0.8;
     final double maxHeight = screenHeight * 0.8;
@@ -142,88 +139,29 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
         child: SizedBox(
           width: maxWidth,
           height: maxHeight,
-          child: SlideTransition(position: _offsetAnimation, child: _ui(maxWidth, maxHeight, cookieData))
+          child: SlideTransition(position: _offsetAnimation, child: _trayUI(maxWidth, maxHeight))
         ),
       ),
     );
   }
 
-  Widget _ui(double maxWidth, double maxHeight, CookieData cookieData) {
+  Widget _trayUI(double maxWidth, double maxHeight) {
     return Stack(
       alignment: Alignment.center,
       children: [
         Positioned.fill(child: _buildTrayImage(maxWidth, maxHeight)),
-        ..._cookieButtonList(maxWidth, maxHeight, cookieData),
-      ],
-    );
-  }
-
-  List<Widget> _cookieButtonList(
-    double maxWidth,
-    double maxHeight,
-    CookieData cookieData,
-  ) {
-    bool isOpenedFor(CookieType t) {
-      final info = cookieData.infos.firstWhere(
-            (i) => i.type.runtimeType == t.runtimeType,
-        orElse: () => DateCookieInfo(type: t, isOpened: false, no: -1),
-      );
-      return info.isOpened;
-    }
-
-    final List<CookieButtonData> cookieButtonDataList = [
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.15, isOpened: isOpenedFor(const CookieType.cheering()),),
-      CookieButtonData(top: maxHeight * 0.15, left: maxWidth * 0.55, isOpened: isOpenedFor(const CookieType.comfort()),),
-      /*  CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.15, isOpened: cookieData.isPassionOpened),
-      CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, isOpened: cookieData.isSermonOpened),
-      CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, isOpened: cookieData.isRandomsOpened),*/
-    ];
-
-    String cookieAssets(int index) {
-      if (cookieButtonDataList[index].isOpened) {
-        return cookieImageDataList[index].openCookie;
-      } else {
-        return cookieImageDataList[index].trayCookie;
-      }
-    }
-
-    showAllCollectionMessage() {
-      return SnackBar(
-        content: const Text(AppStrings.allCollectionMessage, textAlign: TextAlign.center, style: TextStyle(color: AppColor.mainButtonBorder),),
-        backgroundColor: AppColor.mainButtonBackground,
-        duration: const Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.symmetric(
-            horizontal: 85, vertical: 8),
-      );
-    }
-
-    return cookieButtonDataList.asMap().entries.map((entry) {
-      final int index = entry.key;
-      final CookieButtonData btn = entry.value;
-      return Positioned(
-        top: btn.top,
-        left: btn.left,
-        right: btn.right,
-        child: CustomImageButton(
-          imgAssets: cookieAssets(index),
-          width: maxWidth * 0.3,
-          height: maxHeight * 0.3,
-          onPressed: () {
-            viewModel.generateNewCookieNo(CookieType.fromCode(index + 1));
-            if (viewModel.newCookieNo == -1) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  showAllCollectionMessage()
-              );
-            } else {
-              setState(() {
-                _typeOverlayImage = index;
-              });
-            }
+        CookieButtonList(maxWidth: maxWidth,
+          maxHeight: maxHeight,
+          cookieImageDataList: cookieImageDataList,
+          onCookieSelected: (type) {
+            setState(() {
+              _selectCookieType = type;
+            });
           },
-        ),
-      );
-    }).toList();
+        )
+      ]
+      ,
+    );
   }
 
   Widget _buildTrayImage(double imgWidth, double imgHeight) {

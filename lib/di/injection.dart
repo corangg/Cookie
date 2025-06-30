@@ -11,11 +11,10 @@ import 'package:domain/usecases/collection_usecase.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-  final db = AppDatabase.open();
-  sl.registerLazySingleton<AppDatabase>(() => db);
+  sl.registerLazySingleton<AppDatabase>(() => AppDatabase.open());
 
   sl.registerLazySingleton<LocalDataSource>(
-        () => DefaultLocalDataSource(sl()),
+        () => DefaultLocalDataSource(sl<AppDatabase>()),
   );
 
   sl.registerLazySingleton<Repository>(
@@ -27,11 +26,13 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetTodayCookieDataUseCase(sl()));
 
   sl.registerLazySingleton(() => CreateNewCollectionNoUseCase(sl()));
+  sl.registerLazySingleton(() => UpsertCollectionUseCase(sl()));
 
   sl.registerFactory(() => OvenScreenViewModel(
     getTodayCookieDataUseCase: sl(),
     getUseCase: sl(),
     upsertUseCase: sl(),
     createNewCollectionNoUseCase: sl(),
+    upsertCollectionUseCase: sl()
   ));
 }

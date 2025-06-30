@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:core/util/util.dart';
 import 'package:core/values/app_size.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
@@ -11,6 +12,7 @@ class OvenScreenViewModel extends ChangeNotifier {
   final UpsertCookieDataUseCase upsertUseCase;
   final GetTodayCookieDataUseCase getTodayCookieDataUseCase;
   final CreateNewCollectionNoUseCase createNewCollectionNoUseCase;
+  final UpsertCollectionUseCase upsertCollectionUseCase;
   StreamSubscription<CookieData>? _todaySub;
 
   CookieData cookie;
@@ -24,7 +26,8 @@ class OvenScreenViewModel extends ChangeNotifier {
     required this.getUseCase,
     required this.upsertUseCase,
     required this.getTodayCookieDataUseCase,
-    required this.createNewCollectionNoUseCase
+    required this.createNewCollectionNoUseCase,
+    required this.upsertCollectionUseCase
   }) : cookie = CookieData.empty() {
     _startTodayListener();
   }
@@ -79,17 +82,32 @@ class OvenScreenViewModel extends ChangeNotifier {
   }
 
   Future<void> updateDateCookieInfo(DateCookieInfo info) async {
+    //newCode 와 타입, date, isOpened 를 업데이트
     info.isOpened;
     1;
   }
 
-  Future<void> generateNewCookieNo(CookieType type) async {
+  Future<void> testUpsertCollection() async {
     isLoading = true;
     notifyListeners();
     try {
-      final no = await createNewCollectionNoUseCase(type, AppSize.collectionMaxNo);
-      _newCookieNo = no;
+      CollectionData data = CollectionData(type: CookieType.random(), no: -1, date: createTodayDate());
+      await upsertCollectionUseCase.call(data);
     } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> generateNewCookieNo(CookieType type, int collectionSize) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final no = await createNewCollectionNoUseCase(type, collectionSize);
+      _newCookieNo = no;
+    }catch (e) {
+      error = '생성 실패: $e';
+    }  finally {
       isLoading = false;
       notifyListeners();
     }
