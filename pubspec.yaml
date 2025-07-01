@@ -90,6 +90,11 @@ flutter:
     - assets/img/img_cookie_comfort_5.png
     - assets/img/img_cookie_comfort_6.png
     - assets/img/img_cookie_passion_1.png
+    - assets/img/img_cookie_passion_2.png
+    - assets/img/img_cookie_passion_3.png
+    - assets/img/img_cookie_passion_4.png
+    - assets/img/img_cookie_passion_5.png
+    - assets/img/img_cookie_passion_6.png
     - assets/img/img_cookie_sermon_1.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

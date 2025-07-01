@@ -19,5 +19,10 @@ class AppAssets {
   static const imgCookieComfort5 = 'assets/img/img_cookie_comfort_5.png';
   static const imgCookieComfort6 = 'assets/img/img_cookie_comfort_6.png';
   static const imgCookiePassion1 = 'assets/img/img_cookie_passion_1.png';
+  static const imgCookiePassion2 = 'assets/img/img_cookie_passion_2.png';
+  static const imgCookiePassion3 = 'assets/img/img_cookie_passion_3.png';
+  static const imgCookiePassion4 = 'assets/img/img_cookie_passion_4.png';
+  static const imgCookiePassion5 = 'assets/img/img_cookie_passion_5.png';
+  static const imgCookiePassion6 = 'assets/img/img_cookie_passion_6.png';
   static const imgCookieSermon1 = 'assets/img/img_cookie_sermon_1.png';
 }

@@ -53,6 +53,14 @@ class _OvenScreenBodyState extends State<_OvenScreenBody>
       AppAssets.imgCookieComfort5,
       AppAssets.imgCookieComfort6,
     ),
+    CookieImageAssetsData(
+      AppAssets.imgCookiePassion1,
+      AppAssets.imgCookiePassion2,
+      AppAssets.imgCookiePassion3,
+      AppAssets.imgCookiePassion4,
+      AppAssets.imgCookiePassion5,
+      AppAssets.imgCookiePassion6,
+    )
   ];
 
   @override
