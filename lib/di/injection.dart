@@ -1,3 +1,4 @@
+import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:data/local/drift/drift_database.dart';
@@ -37,4 +38,6 @@ Future<void> initDependencies() async {
     upsertCollectionUseCase: sl(),
     updateOpenCookieDataUseCase: sl(),
   ));
+
+  sl.registerFactory(() => CollectionViewModel());
 }

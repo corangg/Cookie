@@ -25,4 +25,7 @@ class AppAssets {
   static const imgCookiePassion5 = 'assets/img/img_cookie_passion_5.png';
   static const imgCookiePassion6 = 'assets/img/img_cookie_passion_6.png';
   static const imgCookieSermon1 = 'assets/img/img_cookie_sermon_1.png';
+
+  static const imgCollectionCheering = 'assets/img/img_collection_cheering.png';
+  static const imgCollectionCheeringHalf = 'assets/img/img_collection_cheering_half.png';
 }

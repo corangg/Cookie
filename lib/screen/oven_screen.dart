@@ -27,8 +27,7 @@ class _OvenScreenBody extends StatefulWidget {
   State<_OvenScreenBody> createState() => _OvenScreenBodyState();
 }
 
-class _OvenScreenBodyState extends State<_OvenScreenBody>
-    with SingleTickerProviderStateMixin {
+class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
 
