@@ -32,6 +32,12 @@ class AppStrings {
     'cheeringTest4',
     'cheeringTest5',
     'cheeringTest6',
+    'cheeringTest7',
+    'cheeringTest8',
+    'cheeringTest9',
+    'cheeringTest10',
+    'cheeringTest11',
+    'cheeringTest12',
   ];
 
   static List<String> comfortCollectionList = [

@@ -98,6 +98,9 @@ flutter:
     - assets/img/img_cookie_sermon_1.png
     - assets/img/img_collection_cheering.png
     - assets/img/img_collection_cheering_half.png
+    - assets/img/img_collection_background.png
+    - assets/img/img_collection_background_top.png
+    - assets/img/img_collection_no.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

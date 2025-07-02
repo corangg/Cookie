@@ -1,7 +1,8 @@
 import 'package:cookie/di/injection.dart';
 import 'package:cookie/viewmodel/collection_view_model.dart';
-import 'package:core/values/app_assets.dart';
+import 'package:cookie/widgets/collection_background_widget.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_string.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,15 +57,23 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   }
 
   Widget _buildBody() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.centerRight,       // 가로: 오른쪽, 세로: 중앙
+        /*Align(
+          alignment: Alignment.bottomCenter,       // 가로: 오른쪽, 세로: 중앙
           child: Image.asset(
-            AppAssets.imgCollectionCheeringHalf,
-            fit: BoxFit.fitWidth,
+            AppAssets.imgCollectionBackgroundTop,
+            fit: BoxFit.fitHeight,
           ),
-        ),
+        ),*/
+        Positioned(
+            top: screenHeight * 0.07,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: CollectionWidget(items: AppStrings.cheeringCollectionList))
       ],
     );
   }

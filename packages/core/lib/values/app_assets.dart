@@ -28,4 +28,16 @@ class AppAssets {
 
   static const imgCollectionCheering = 'assets/img/img_collection_cheering.png';
   static const imgCollectionCheeringHalf = 'assets/img/img_collection_cheering_half.png';
+  static const imgCollectionBackground = 'assets/img/img_collection_background.png';
+  static const imgCollectionBackgroundTop = 'assets/img/img_collection_background_top.png';
+  static const imgCollectionNo = 'assets/img/img_collection_no.png';
+
+  static String imgTypeOpenCookie(int type) {
+    return switch (type) {
+      1 => imgCookieCheering6,
+      2 => imgCookieComfort6,
+      3 => imgCookiePassion6,
+      _ => throw ArgumentError('알 수 없는 CookieType: $type'),
+    };
+  }
 }
