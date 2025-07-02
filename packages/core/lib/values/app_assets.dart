@@ -31,6 +31,8 @@ class AppAssets {
   static const imgCollectionCheeringHalf = 'assets/img/img_collection_cheering_half.png';
   static const imgCollectionBackground = 'assets/img/img_collection_background.png';
   static const imgCollectionBackgroundTop = 'assets/img/img_collection_background_top.png';
+  static const imgCollectionBackgroundMid = 'assets/img/img_collection_background_mid.png';
+  static const imgCollectionBackgroundBottom = 'assets/img/img_collection_background_bottom.png';
   static const imgCollectionNo = 'assets/img/img_collection_no.png';
 
   static String imgTypeOpenCookie(int type) {
