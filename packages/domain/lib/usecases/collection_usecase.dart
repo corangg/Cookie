@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:domain/model/models.dart';
@@ -23,11 +22,22 @@ class CreateNewCollectionNoUseCase {
   }
 }
 
-class  UpsertCollectionUseCase {
+class UpsertCollectionUseCase {
   final Repository _repo;
   UpsertCollectionUseCase(this._repo);
 
   Future<void> call(CollectionData data) {
     return _repo.upsertCollectionData(data);
+  }
+}
+
+class GetTypeCollectionDataUseCase {
+  final Repository _repo;
+
+  GetTypeCollectionDataUseCase(this._repo);
+
+  Future<List<CollectionData>> call(CookieType cookieType) async {
+    final list = await _repo.getCollectionData(cookieType.code);
+    return list.where((data) => data.type == cookieType).toList();
   }
 }

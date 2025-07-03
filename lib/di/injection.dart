@@ -39,5 +39,7 @@ Future<void> initDependencies() async {
     updateOpenCookieDataUseCase: sl(),
   ));
 
-  sl.registerFactory(() => CollectionViewModel());
+  sl.registerFactory(() => CollectionViewModel(
+    getTypeCollectionDataUseCase: sl()
+  ));
 }
