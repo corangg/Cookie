@@ -11,4 +11,5 @@ class AppColor {
   static const bottomNavigationBarBorder = Color(0xFF593714);
 
   static const spinnerBackground = Color(0xFFEEB85E);
+  static const checkboxCheck = Color(0xFFEEB85E);
 }

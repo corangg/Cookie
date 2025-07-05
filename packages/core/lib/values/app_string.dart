@@ -13,6 +13,10 @@ class AppStrings {
   static const allCollectionMessage = '모든 쿠키를 수집 했어요!';
   static const errorCookieMessage = '죄송합니다. 오류가 발생했어요';
 
+  static const textShowCollectionCookie = '수집한 쿠키만 보기';
+
+  static List<String> viewTypeList = ['번호', '획득 날짜'];
+
 
   static List<String> getCookieMessageList(int type) {
     return switch (type){

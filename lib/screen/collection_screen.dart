@@ -27,6 +27,7 @@ class _CollectionBody extends StatefulWidget {
 }
 
 class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin {
+  bool _isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,10 +66,17 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       children: [
         Positioned(
           top: 0,
-            right: screenWidth*0.05,
+            left: screenWidth*0.1,
             child: Container(
               child: _collectionViewTypeSpinner(screenWidth,screenHeight),
             )),
+        Positioned(
+            top: 0,
+            left: screenWidth * 0.4,
+            child: Container(
+              //color: Colors.red,
+              child: _viewCollectionCheckBox(screenHeight),)
+        ),
         Positioned(
             top: screenHeight * 0.07,
             left: 0,
@@ -78,12 +86,39 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       ],
     );
   }
+  
+  Widget _viewCollectionCheckBox(double screenHeight) {
+    return SizedBox(
+      height: screenHeight * 0.04,
+      child: Row(
+        children: [
+          Checkbox(
+              value: _isChecked,
+              checkColor: AppColor.bottomNavigationBarBorder,
+              activeColor: AppColor.checkboxCheck,
+              visualDensity: const VisualDensity(horizontal: -4,),
+              side: WidgetStateBorderSide.resolveWith((states) {
+                return const BorderSide(
+                    color: AppColor.bottomNavigationBarBorder, width: 3);
+              }),
+              onChanged: (bool? newValue,) {
+                setState(() {
+                  _isChecked = newValue!;
+                });
+              }),
+          Text(
+            AppStrings.textShowCollectionCookie,
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 16, color: AppColor.bottomNavigationBarBorder)),
+        ],
+      ),
+    );
+  }
 
 
   Widget _collectionViewTypeSpinner(double screenWidth,double screenHeight) {
-    final List<String> viewTypeList = ['번호', '획득 날짜'];
     return DropDownWidget(
-      dropdownList: viewTypeList,
+      dropdownList: AppStrings.viewTypeList,
       dropdownBoxPadding: Pair(12, 4),
       dropdownBoxColor: AppColor.spinnerBackground,
       dropdownBoxBorderColor: AppColor.bottomNavigationBarBorder,
