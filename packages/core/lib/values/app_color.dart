@@ -9,4 +9,6 @@ class AppColor {
   static const bottomNavigationBarIconBackground = Color(0xFFF5B82B);
   static const bottomNavigationBarIcon = Color(0xFFF5B82B);
   static const bottomNavigationBarBorder = Color(0xFF593714);
+
+  static const spinnerBackground = Color(0xFFEEB85E);
 }

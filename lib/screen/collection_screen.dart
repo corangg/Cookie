@@ -1,8 +1,10 @@
 import 'package:cookie/di/injection.dart';
 import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/widgets/collection_background_widget.dart';
+import 'package:core/util/pair.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/values/app_string.dart';
+import 'package:core/widgets/spinner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,13 +63,12 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     final screenHeight = MediaQuery.of(context).size.height;
     return Stack(
       children: [
-        /*Align(
-          alignment: Alignment.bottomCenter,       // 가로: 오른쪽, 세로: 중앙
-          child: Image.asset(
-            AppAssets.imgCollectionBackgroundTop,
-            fit: BoxFit.fitHeight,
-          ),
-        ),*/
+        Positioned(
+          top: 0,
+            right: screenWidth*0.05,
+            child: Container(
+              child: _collectionViewTypeSpinner(screenWidth,screenHeight),
+            )),
         Positioned(
             top: screenHeight * 0.07,
             left: 0,
@@ -75,6 +76,36 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             bottom: 0,
             child: CollectionWidget(items: AppStrings.cheeringCollectionList))
       ],
+    );
+  }
+
+
+  Widget _collectionViewTypeSpinner(double screenWidth,double screenHeight) {
+    final List<String> viewTypeList = ['번호', '획득 날짜'];
+    return DropDownWidget(
+      dropdownList: viewTypeList,
+      dropdownBoxPadding: Pair(12, 4),
+      dropdownBoxColor: AppColor.spinnerBackground,
+      dropdownBoxBorderColor: AppColor.bottomNavigationBarBorder,
+      dropdownBoxBorderWidth: 4,
+      dropdownBoxBorderRadius: 12,
+      dropdownBoxWidth: screenWidth * 0.3,
+      dropdownBoxHeight: screenHeight * 0.04,
+      isIcon: false,
+      itemBackgroundColor: AppColor.spinnerBackground,
+      itemBorderColor: AppColor.bottomNavigationBarBorder,
+      dropdownBoxTextSize: 14,
+      dropdownBoxTextColor: AppColor.bottomNavigationBarBorder,
+      dropdownBoxTextWeight: FontWeight.w900,
+      dropdownListMaxHeight: 200,
+      dropdownListRadius: 12,
+      dropdownItemWidth: screenWidth * 0.3,
+      dropdownItemHeight: 40,
+      dropdownItemTextSize: 14,
+      dropdownItemTextColor: AppColor.bottomNavigationBarBorder,
+      dropdownItemTextWeight: FontWeight.w900,
+      selectItemIconColor: AppColor.bottomNavigationBarBorder,
+      selectItemIconSize: 14,
     );
   }
 }
