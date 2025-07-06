@@ -174,6 +174,8 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     final maxWidth = screenWidth * 0.9;
     const crossAxisCount = 2;
     final cellWidth = maxWidth / crossAxisCount;
-    return cellWidth * 1.3;
+    final cellHeight = cellWidth * 1.3;
+    final rowCount = (widget.items.length / crossAxisCount).ceil();
+    return cellHeight * rowCount;
   }
 }

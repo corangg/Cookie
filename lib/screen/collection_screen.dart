@@ -159,8 +159,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
       decoration: BoxDecoration(
           color: AppColor.collectionCookieButton,
-          border: Border.all(
-              color: AppColor.bottomNavigationBarBorder, width: 6),
+          border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 6),
           borderRadius: BorderRadius.circular(16)
       ),
       child: ListView.builder(
