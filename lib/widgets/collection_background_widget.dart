@@ -113,7 +113,13 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
             Expanded(flex: 2, child: Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset(AppAssets.imgCollectionNo, fit: BoxFit.contain,),
+                Container(
+                  decoration: BoxDecoration(
+                      color: AppColor.collectionCookieButton,
+                      border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 2),
+                      borderRadius: BorderRadius.circular(6)
+                  ),
+                ),
                 Text('No.${data.no}',
                   style: TextStyle(
                       fontSize: 12,
