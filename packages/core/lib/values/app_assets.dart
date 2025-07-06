@@ -43,4 +43,11 @@ class AppAssets {
       _ => imgCookieDisable,
     };
   }
+
+  static List<String> cookieTypeAssetsList = [
+    imgCookieCheering1,
+    imgCookieComfort1,
+    imgCookiePassion1,
+    imgCookieSermon1,
+  ];
 }

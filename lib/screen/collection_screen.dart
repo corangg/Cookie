@@ -2,8 +2,10 @@ import 'package:cookie/di/injection.dart';
 import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/widgets/collection_background_widget.dart';
 import 'package:core/util/pair.dart';
+import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/values/app_string.dart';
+import 'package:core/widgets/custom_img_button.dart';
 import 'package:core/widgets/spinner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -60,29 +62,36 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   }
 
   Widget _buildBody() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     return Stack(
       children: [
         Positioned(
-          top: 0,
-            left: screenWidth*0.1,
-            child: Container(
-              child: _collectionViewTypeSpinner(screenWidth,screenHeight),
-            )),
+            top: 0,
+            left: screenWidth * 0.1,
+            child: _collectionViewTypeSpinner(screenWidth, screenHeight)),
         Positioned(
             top: 0,
             left: screenWidth * 0.4,
-            child: Container(
-              //color: Colors.red,
-              child: _viewCollectionCheckBox(screenHeight),)
-        ),
+            child: _viewCollectionCheckBox(screenHeight)),
         Positioned(
-            top: screenHeight * 0.07,
+            top: screenHeight * 0.06,
+            left: 0,
+            right: 0,
+            bottom: screenHeight * 0.1,
+            child: CollectionWidget(items: AppStrings.cheeringCollectionList,)),
+        Positioned(
             left: 0,
             right: 0,
             bottom: 0,
-            child: CollectionWidget(items: AppStrings.cheeringCollectionList))
+            height: screenHeight * 0.1,
+            child: _cookieTypeListView(AppAssets.cookieTypeAssetsList, screenHeight * 0.05, screenHeight * 0.05, screenWidth * 0.2))
       ],
     );
   }
@@ -141,6 +150,39 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       dropdownItemTextWeight: FontWeight.w900,
       selectItemIconColor: AppColor.bottomNavigationBarBorder,
       selectItemIconSize: 14,
+    );
+  }
+
+  Widget _cookieTypeListView(List<String> items, double itemWidth, double itemHeight, double containerWidth) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+      decoration: BoxDecoration(
+          color: AppColor.collectionCookieButton,
+          border: Border.all(
+              color: AppColor.bottomNavigationBarBorder, width: 6),
+          borderRadius: BorderRadius.circular(16)
+      ),
+      child: ListView.builder(
+          itemCount: items.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return Container(
+                width: containerWidth,
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColor.mainBackground,
+                  border: Border.all(
+                      color: AppColor.bottomNavigationBarBorder, width: 3),
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                alignment: Alignment.center,
+                child: CustomImageButton(
+                    imgAssets: item, width: itemWidth, height: itemHeight)
+            );
+          }),
     );
   }
 }

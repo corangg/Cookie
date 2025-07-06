@@ -12,4 +12,6 @@ class AppColor {
 
   static const spinnerBackground = Color(0xFFEEB85E);
   static const checkboxCheck = Color(0xFFEEB85E);
+
+  static const collectionCookieButton = Color(0xFFEEB85E);
 }

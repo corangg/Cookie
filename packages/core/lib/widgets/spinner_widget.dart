@@ -158,17 +158,18 @@ class _SpinnerWidget extends State<DropDownWidget> {
   }
 
   Widget _dropdownList(Offset offset, Size size) {
-    return Positioned(left: offset.dx,
-      top: offset.dy + size.height,
-      width: widget.dropdownItemWidth,
-      child: Material(
-        elevation: 4,
-        color: Colors.transparent,
-        child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: widget.dropdownListMaxHeight),
-            child: _drawListView()
+    return Positioned(
+        left: offset.dx,
+        top: offset.dy + size.height,
+        width: widget.dropdownItemWidth,
+        child: Material(
+            elevation: 4,
+            color: Colors.transparent,
+            child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: widget.dropdownListMaxHeight),
+                child: _drawListView()
+            )
         )
-      )
     );
   }
 
