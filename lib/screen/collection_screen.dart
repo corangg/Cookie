@@ -91,7 +91,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             right: 0,
             bottom: 0,
             height: screenHeight * 0.1,
-            child: _cookieTypeListView(AppAssets.cookieTypeAssetsList, screenHeight * 0.05, screenHeight * 0.05, screenWidth * 0.2))
+            child: _cookieTypeListView(AppAssets.cookieTypeAssetsList, screenWidth * 0.2))
       ],
     );
   }
@@ -153,7 +153,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     );
   }
 
-  Widget _cookieTypeListView(List<String> items, double itemWidth, double itemHeight, double containerWidth) {
+  Widget _cookieTypeListView(List<String> items, double itemWidth) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
@@ -169,7 +169,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
           itemBuilder: (context, index) {
             final item = items[index];
             return Container(
-                width: containerWidth,
+                width: itemWidth,
                 padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -180,7 +180,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 alignment: Alignment.center,
                 child: CustomImageButton(
-                    imgAssets: item, width: itemWidth, height: itemHeight)
+                    imgAssets: item, width: itemWidth * 0.5, height: itemWidth * 0.5)
             );
           }),
     );
