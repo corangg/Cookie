@@ -94,6 +94,7 @@ sealed class CookieType {
   const factory CookieType.passion() =  CookieTypePassion;
   const factory CookieType.sermon() =  CookieTypeSermon;
   const factory CookieType.random() =  CookieTypeRandom;
+  const factory CookieType.unCollected() =  CookieTypeUnCollected;
 
   static CookieType fromCode(int code) {
     return switch (code) {
@@ -102,6 +103,7 @@ sealed class CookieType {
       3 => const CookieType.passion(),
       4 => const CookieType.sermon(),
       5 => const CookieType.random(),
+      6 => const CookieType.unCollected(),
       _ => throw ArgumentError('알 수 없는 CookieType 코드: $code'),
     };
   }
@@ -121,6 +123,10 @@ final class CookieTypeSermon extends CookieType {
 }
 final class CookieTypeRandom extends CookieType {
   const CookieTypeRandom(): super(5);
+}
+
+final class CookieTypeUnCollected extends CookieType {
+  const CookieTypeUnCollected(): super(6);
 }
 
 class CollectionData {
