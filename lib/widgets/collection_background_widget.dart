@@ -15,9 +15,22 @@ class CollectionWidget extends StatefulWidget {
 
 class _CollectionBackgroundWidget extends State<CollectionWidget> {
   final ScrollController _controller = ScrollController();
+  late final List<Widget> _backgroundWidgets;
+  late final double screenWidth;
+  late final double screenHeight;
+
   double _scrollOffset = 0.0;
 
   final test = CollectionData(type: CookieType.fromCode(1), no: 14, date: createTodayDate());
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+
+    _setBackgroundWidgets(screenWidth);
+  }
 
   @override
   void dispose() {
@@ -27,17 +40,16 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    return _scrollBody();
+  }
 
+  Widget _scrollBody(){
     final topPaddingValue = screenHeight * 0.03;
     final maxWidth = screenWidth * 0.9;
     const crossAxisCount = 2;
-    final cellWidth = maxWidth / crossAxisCount;
-    final cellHeight = cellWidth * 1.3;
-    final rowCount = (widget.items.length / crossAxisCount).ceil();
-    final scrollHeight = cellHeight * rowCount;
-    final backgroundAsset = _backgroundAsset(_getScrollValue(scrollHeight, screenHeight - topPaddingValue));
+
+    final scrollHeight = _calculateScrollHeight();
+    final scrollValue = _getScrollValue(scrollHeight, screenHeight - topPaddingValue);
 
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollInfo) {
@@ -52,9 +64,9 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              _setBackgroundImage(backgroundAsset, maxWidth, scrollHeight),
-
-              Positioned(top: topPaddingValue,
+              IndexedStack(index: _getScrollIndex(scrollValue), children: _backgroundWidgets),
+              Positioned(
+                  top: topPaddingValue,
                   left: screenWidth * 0.10,
                   right: screenWidth * 0.10,
                   bottom: 0,
@@ -120,7 +132,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     required double width,
     required double height,
     required Alignment alignment,
-    //Alignment alignment = Alignment.topCenter,
   }) {
     return SizedBox(
       width: width,
@@ -139,37 +150,30 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     );
   }
 
-  Widget _setBackgroundImage(String backgroundAsset, double backgroundWidth, double backgroundHeight) {
-    return switch(backgroundAsset){
-      AppAssets.imgCollectionBackgroundTop => buildCroppedFitWidthImage(assetPath: backgroundAsset,
-          width: backgroundWidth,
-          height: backgroundHeight,
-          alignment: Alignment.topCenter),
-      AppAssets.imgCollectionBackgroundBottom => buildCroppedFitWidthImage(assetPath: backgroundAsset,
-          width: backgroundWidth,
-          height: backgroundHeight,
-          alignment: Alignment.bottomCenter),
-      _ => Image.asset(
-        backgroundAsset,
-        width: backgroundWidth,
-        height: backgroundHeight,
-        fit: BoxFit.fill,
-        gaplessPlayback: true,
-      )
-    };
-  }
-
-  String _backgroundAsset(double scrollValue) {
-    return scrollValue < 0.1
-        ? AppAssets.imgCollectionBackgroundTop
-        : scrollValue < 0.9
-        ? AppAssets.imgCollectionBackgroundMid
-        : AppAssets.imgCollectionBackgroundBottom;
-  }
-
   double _getScrollValue(double scrollHeight, double viewHeight) {
     final maxScroll = _controller.hasClients ? _controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
     final offset = _scrollOffset.clamp(0.0, maxScroll);
     return maxScroll > 0 ? (offset / maxScroll).clamp(0.0, 1.0) : 0.0;
+  }
+
+  void _setBackgroundWidgets(double screenWidth){
+    final maxWidth = screenWidth * 0.9;
+    final scrollHeight = _calculateScrollHeight();
+    _backgroundWidgets = [
+      buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundTop, width: maxWidth, height: scrollHeight, alignment: Alignment.topCenter),
+      Image.asset(AppAssets.imgCollectionBackgroundMid, width: maxWidth, height: scrollHeight, fit: BoxFit.fill, gaplessPlayback: true),
+      buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, height: scrollHeight, alignment: Alignment.bottomCenter)
+    ];
+  }
+
+  int _getScrollIndex(double scrollValue) {
+    return scrollValue < 0.1 ? 0 : scrollValue < 0.9 ? 1 : 2;
+  }
+
+  double _calculateScrollHeight() {
+    final maxWidth = screenWidth * 0.9;
+    const crossAxisCount = 2;
+    final cellWidth = maxWidth / crossAxisCount;
+    return cellWidth * 1.3;
   }
 }
