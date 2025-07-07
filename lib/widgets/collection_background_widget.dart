@@ -1,4 +1,3 @@
-import 'package:core/util/util.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:domain/model/models.dart';
@@ -6,8 +5,15 @@ import 'package:flutter/material.dart';
 
 class CollectionWidget extends StatefulWidget {
   final List<CollectionData> items;
+  final double screenWidth;
+  final double screenHeight;
 
-  const CollectionWidget({super.key, required this.items});
+  const CollectionWidget({
+    super.key,
+    required this.items,
+    required this.screenWidth,
+    required this.screenHeight
+  });
 
   @override
   State<CollectionWidget> createState() => _CollectionBackgroundWidget();
@@ -19,13 +25,24 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final double screenWidth;
   late final double screenHeight;
 
+  final testList = [
+    CollectionData(type: CookieType.cheering(), no: 1, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
+  ];
+
   double _scrollOffset = 0.0;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = widget.screenWidth;
+    screenHeight = widget.screenHeight;
 
     _setBackgroundWidgets(screenWidth);
   }
@@ -42,19 +59,22 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   }
 
   Widget _scrollBody(){
-    final topPaddingValue = screenHeight * 0.03;
+    final heightPaddingValue = screenHeight * 0.04;
     final maxWidth = screenWidth * 0.9;
     const crossAxisCount = 2;
 
     final scrollHeight = _calculateScrollHeight();
-    final scrollValue = _getScrollValue(scrollHeight, screenHeight - topPaddingValue);
+    final viewHeight   = screenHeight - heightPaddingValue;
+    final canScroll    = scrollHeight > viewHeight;
+    final scrollValue = _getScrollValue(scrollHeight, viewHeight);
 
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollInfo) {
         setState(() {_scrollOffset = scrollInfo.metrics.pixels;});
         return false;
       },
-      child: SingleChildScrollView(
+      child: canScroll?
+      SingleChildScrollView(
         controller: _controller,
         child: SizedBox(
           width: maxWidth,
@@ -64,14 +84,32 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
             children: [
               IndexedStack(index: _getScrollIndex(scrollValue), children: _backgroundWidgets),
               Positioned(
-                  top: topPaddingValue,
+                  top: heightPaddingValue,
                   left: screenWidth * 0.10,
                   right: screenWidth * 0.10,
                   bottom: 0,
-                  child: _collectionGridView(crossAxisCount))
+                  child: _collectionGridView(crossAxisCount)
+              )
             ],
           ),
         ),
+      ):
+      Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+              top: 0,
+              left: screenWidth * 0,
+              right: screenWidth * 0,
+              bottom: 0,
+              child: Image.asset(AppAssets.imgCollectionBackground, width: maxWidth, height: viewHeight, fit: BoxFit.fill, gaplessPlayback: true)),
+          Positioned(
+              top: heightPaddingValue,
+              left: screenWidth * 0.1,
+              right: screenWidth * 0.1,
+              bottom: heightPaddingValue,
+              child: _collectionGridView(crossAxisCount))
+        ],
       ),
     );
   }
@@ -86,13 +124,13 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 1 / 1.3,
+        childAspectRatio: 1,
       ),
-      itemCount: widget.items.length,
+      itemCount: testList.length,//widget.items.length,
       itemBuilder: (_, index) =>
           Padding(
-            padding: const EdgeInsets.all(12),
-            child: _itemCollectionData(widget.items[index]),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: _itemCollectionData(/*widget.items[index]*/testList[index]),
           ),
     );
   }
@@ -100,14 +138,11 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   Widget _itemCollectionData(CollectionData data) {
     final openCookieImg = AppAssets.imgTypeOpenCookie(data.type.code);
     return AspectRatio(
-        aspectRatio: 1 / 1.3,
+        aspectRatio: 1,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(flex: 8, child: Image.asset(
-                openCookieImg
-            )),
-
+            Expanded(flex: 8, child: Image.asset(openCookieImg)),
             Expanded(flex: 2, child: Stack(
               alignment: Alignment.center,
               children: [
@@ -123,8 +158,9 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
                       fontSize: 12,
                       color: AppColor.mainButtonBorder,
                       fontWeight: FontWeight.w800
-                  ),)
-              ],)
+                  )
+                )
+              ])
             )
           ],
         )
@@ -166,7 +202,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     _backgroundWidgets = [
       buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundTop, width: maxWidth, height: scrollHeight, alignment: Alignment.topCenter),
       Image.asset(AppAssets.imgCollectionBackgroundMid, width: maxWidth, height: scrollHeight, fit: BoxFit.fill, gaplessPlayback: true),
-      buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, height: scrollHeight, alignment: Alignment.bottomCenter)
+      buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, height: scrollHeight, alignment: Alignment.bottomCenter),
     ];
   }
 
@@ -175,11 +211,11 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   }
 
   double _calculateScrollHeight() {
-    final maxWidth = screenWidth * 0.9;
+    final maxWidth = screenWidth * 0.8;
     const crossAxisCount = 2;
     final cellWidth = maxWidth / crossAxisCount;
-    final cellHeight = cellWidth * 1.3;
-    final rowCount = (widget.items.length / crossAxisCount).ceil();
+    final cellHeight = (cellWidth * 1.3);
+    final rowCount = (/*widget.items.length*/testList.length / crossAxisCount).ceil();
     return cellHeight * rowCount;
   }
 }

@@ -100,7 +100,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             left: 0,
             right: 0,
             bottom: screenHeight * 0.1,
-            child: CollectionWidget(items: viewModel.collectionList)),//여기 너무 빨리감
+            child: CollectionWidget(items: viewModel.collectionList,screenWidth: screenWidth,screenHeight: screenHeight*0.84,)),//여기 너무 빨리감
         Positioned(
             left: 0,
             right: 0,
