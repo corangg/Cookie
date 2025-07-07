@@ -23,7 +23,7 @@ class CollectionWidget extends StatefulWidget {
 
 class _CollectionBackgroundWidget extends State<CollectionWidget> {
   final ScrollController _controller = ScrollController();
-  late final List<Widget> _backgroundWidgets;
+  List<Widget> _backgroundWidgets =[];
   late final double screenWidth;
   late final double screenHeight;
   List<CollectionData> collectionList = [];
@@ -36,8 +36,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     super.didChangeDependencies();
     screenWidth = widget.screenWidth;
     screenHeight = widget.screenHeight;
-
-    _setBackgroundWidgets(screenWidth);
   }
 
   @override
@@ -49,6 +47,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   @override
   Widget build(BuildContext context) {
     collectionList = _modifyList();
+    _setBackgroundWidgets(screenWidth);
     return _scrollBody();
   }
 
@@ -76,7 +75,9 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              IndexedStack(index: _getScrollIndex(scrollValue), children: _backgroundWidgets),
+              IndexedStack(
+                  index: _getScrollIndex(scrollValue),
+                  children: _backgroundWidgets),
               Positioned(
                   top: heightPaddingValue,
                   left: screenWidth * 0.10,
