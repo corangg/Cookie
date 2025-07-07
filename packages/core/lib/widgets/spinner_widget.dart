@@ -1,4 +1,5 @@
 import 'package:core/util/pair.dart';
+import 'package:core/util/util.dart';
 import 'package:flutter/material.dart';
 
 class DropDownWidget extends StatefulWidget {
@@ -29,6 +30,7 @@ class DropDownWidget extends StatefulWidget {
   final Color selectItemIconColor;
   final IconData selectItemIcon;
   final double selectItemIconSize;
+  final IntCallback onSelected;
 
   const DropDownWidget({
     super.key,
@@ -59,6 +61,7 @@ class DropDownWidget extends StatefulWidget {
     this.selectItemIconColor = const Color(0xFF000000),
     this.selectItemIcon = Icons.check,
     this.selectItemIconSize = 14,
+    required this.onSelected
   });
 
   @override
@@ -197,6 +200,7 @@ class _SpinnerWidget extends State<DropDownWidget> {
               setState(() => _selectedValue = item);
               _overlayEntry?.remove();
               _overlayEntry = null;
+              widget.onSelected(index);
             },
             child: _drawItem(isSelected, item)
           );

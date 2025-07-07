@@ -140,3 +140,26 @@ class CollectionData {
     required this.date,
   });
 }
+
+sealed class CollectionViewType {
+  final int code;
+  const CollectionViewType(this.code);
+
+  const factory CollectionViewType.no() =  CollectionViewTypeNo;
+  const factory CollectionViewType.date() =  CollectionViewTypeDate;
+
+  static CollectionViewType fromCode(int code) {
+    return switch (code) {
+      1 => const CollectionViewType.no(),
+      2 => const CollectionViewType.date(),
+      _ => throw ArgumentError('알 수 없는 CollectionViewType 코드: $code'),
+    };
+  }
+}
+
+final class CollectionViewTypeNo extends CollectionViewType {
+  const CollectionViewTypeNo(): super(1);
+}
+final class CollectionViewTypeDate extends CollectionViewType {
+  const CollectionViewTypeDate(): super(2);
+}

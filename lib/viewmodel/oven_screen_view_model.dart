@@ -80,6 +80,21 @@ class OvenScreenViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> upsertCollectionData(CookieType type) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final collectionData = CollectionData(type: type, no: newCookieNo?? -1 , date: createTodayDate());
+      upsertCollectionUseCase.call(collectionData);
+
+    } catch (e) {
+      error = 'Collection Upsert Failed: $e';
+    } finally {
+      isLoading=false;
+      notifyListeners();
+    }
+  }
+
   @override
   void dispose() {
     _todaySub?.cancel();

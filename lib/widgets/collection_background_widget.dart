@@ -5,7 +5,7 @@ import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
 class CollectionWidget extends StatefulWidget {
-  final List<String> items;
+  final List<CollectionData> items;
 
   const CollectionWidget({super.key, required this.items});
 
@@ -20,8 +20,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final double screenHeight;
 
   double _scrollOffset = 0.0;
-
-  final test = CollectionData(type: CookieType.fromCode(1), no: 14, date: createTodayDate());
 
   @override
   void didChangeDependencies() {
@@ -91,10 +89,10 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         childAspectRatio: 1 / 1.3,
       ),
       itemCount: widget.items.length,
-      itemBuilder: (_, idx) =>
+      itemBuilder: (_, index) =>
           Padding(
             padding: const EdgeInsets.all(12),
-            child: _itemCollectionData(test),
+            child: _itemCollectionData(widget.items[index]),
           ),
     );
   }

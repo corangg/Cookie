@@ -7,6 +7,7 @@ import 'package:core/values/app_color.dart';
 import 'package:core/values/app_string.dart';
 import 'package:core/widgets/custom_img_button.dart';
 import 'package:core/widgets/spinner_widget.dart';
+import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,21 @@ class _CollectionBody extends StatefulWidget {
 }
 
 class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin {
+  late final CollectionViewModel viewModel;
   bool _isChecked = false;
+
+  @override
+  void initState() {
+    viewModel = sl<CollectionViewModel>();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    viewModel.setCollectionList(CookieType.fromCode(1));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +100,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             left: 0,
             right: 0,
             bottom: screenHeight * 0.1,
-            child: CollectionWidget(items: AppStrings.cheeringCollectionList,)),
+            child: CollectionWidget(items: viewModel.collectionList)),//여기 너무 빨리감
         Positioned(
             left: 0,
             right: 0,
@@ -150,6 +165,11 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       dropdownItemTextWeight: FontWeight.w900,
       selectItemIconColor: AppColor.bottomNavigationBarBorder,
       selectItemIconSize: 14,
+      onSelected: (selected){
+        setState(() {
+          viewModel.setCollectionViewType(CollectionViewType.fromCode(selected));
+        });
+      },
     );
   }
 
@@ -179,7 +199,13 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 alignment: Alignment.center,
                 child: CustomImageButton(
-                    imgAssets: item, width: itemWidth * 0.5, height: itemWidth * 0.5)
+                  imgAssets: item, width: itemWidth * 0.5, height: itemWidth * 0.5,
+                  onPressed: () {
+                    setState(() {
+                      viewModel.setCollectionList(CookieType.fromCode(index + 1));
+                    });
+                  },
+                )
             );
           }),
     );
