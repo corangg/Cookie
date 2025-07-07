@@ -32,6 +32,7 @@ class _CollectionBody extends StatefulWidget {
 class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin {
   late final CollectionViewModel viewModel;
   bool _isChecked = false;
+  CookieType _cookieType = CookieTypeCheering();
 
   @override
   void initState() {
@@ -167,7 +168,8 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       selectItemIconSize: 14,
       onSelected: (selected){
         setState(() {
-          viewModel.setCollectionViewType(CollectionViewType.fromCode(selected));
+          viewModel.setCollectionViewType(CollectionViewType.fromCode(selected+1));
+          viewModel.setCollectionList(_cookieType);
         });
       },
     );
@@ -202,6 +204,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                   imgAssets: item, width: itemWidth * 0.5, height: itemWidth * 0.5,
                   onPressed: () {
                     setState(() {
+                      _cookieType = CookieType.fromCode(index + 1);
                       viewModel.setCollectionList(CookieType.fromCode(index + 1));
                     });
                   },

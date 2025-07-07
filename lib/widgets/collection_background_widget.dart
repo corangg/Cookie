@@ -25,16 +25,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final double screenWidth;
   late final double screenHeight;
 
-  final testList = [
-    CollectionData(type: CookieType.cheering(), no: 1, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-    CollectionData(type: CookieType.cheering(), no: 2, date: DateTime.now()),
-  ];
 
   double _scrollOffset = 0.0;
 
@@ -55,6 +45,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final list = widget.items;
     return _scrollBody();
   }
 
@@ -126,11 +117,11 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         mainAxisSpacing: 8,
         childAspectRatio: 1,
       ),
-      itemCount: testList.length,//widget.items.length,
+      itemCount: widget.items.length,
       itemBuilder: (_, index) =>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: _itemCollectionData(/*widget.items[index]*/testList[index]),
+            child: _itemCollectionData(widget.items[index]),
           ),
     );
   }
@@ -215,7 +206,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     const crossAxisCount = 2;
     final cellWidth = maxWidth / crossAxisCount;
     final cellHeight = (cellWidth * 1.3);
-    final rowCount = (/*widget.items.length*/testList.length / crossAxisCount).ceil();
+    final rowCount = (widget.items.length / crossAxisCount).ceil();
     return cellHeight * rowCount;
   }
 }

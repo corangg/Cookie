@@ -46,16 +46,11 @@ class FillCollectionDataListUseCase {
     final collectionSize = AppStrings.getCookieMessageList(cookieType.code).length;
     final source = list.length > collectionSize ? list.sublist(0, collectionSize) : list;
     final now = DateTime.now();
-    return List<CollectionData>.generate(
-      collectionSize, (i) {
-        if (i < source.length) {
-          return source[i];
-        } else {
-          return CollectionData(type: CookieType.unCollected(), no: i + 1, date: now,
-          );
-        }
-      },
-      growable: false,
-    );
+    final List<CollectionData> fillList = [];
+    for (int i = 0; i < collectionSize; i++) {
+      final data = source.firstWhere((data) => data.no == i + 1, orElse: () => CollectionData(type: CookieType.unCollected(), no: i + 1, date: now,));
+      fillList.add(data);
+    }
+    return fillList;
   }
 }

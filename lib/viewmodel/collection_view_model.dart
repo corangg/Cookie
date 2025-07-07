@@ -11,7 +11,7 @@ class CollectionViewModel extends ChangeNotifier {
 
   List<CollectionData> collectionList = [];
 
-  CollectionViewType viewType = CollectionViewType.no();
+  CollectionViewType viewType = CollectionViewTypeNo();
 
   bool isLoading = false;
   String? error;
@@ -25,13 +25,14 @@ class CollectionViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final localList = await getTypeCollectionDataUseCase(type);
-      if(viewType == CollectionViewType.no()){
-       localList.sortByNo();
-      }else if(viewType == CollectionViewType.date()){
-        localList.sortByDate();
+      final localList = await getTypeCollectionDataUseCase.call(type);
+      final fillList = fillCollectionDataListUseCase.call(localList, type);
+      switch (viewType.code){
+        case 1:fillList.sortByNo();
+        case 2 : fillList.sortByDate();
+        case _ :throw ArgumentError('알 수 없는 CollectionViewType 코드: ${viewType.code}');
       }
-      collectionList = localList;
+      collectionList = fillList;
     } catch (e) {
       error = 'collectionData 가져오기 실패: $e';
     }
