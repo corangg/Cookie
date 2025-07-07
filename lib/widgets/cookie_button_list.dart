@@ -87,9 +87,9 @@ class _CookieButtonList extends State<CookieButtonList>{
 
   List<CookieButtonData> _setCookieButtonList(double width, double height) {
     return [
-      CookieButtonData(top: height * 0.2, left: width * 0.15, isOpened: _isOpenedFor(const CookieType.cheering()),),
-      CookieButtonData(top: height * 0.2, left: width * 0.55, isOpened: _isOpenedFor(const CookieType.comfort()),),
-      CookieButtonData(top: height * 0.35, left: width * 0.15, isOpened: _isOpenedFor(const CookieType.passion()),),
+      CookieButtonData(top: height * 0.22, left: width * 0.15, isOpened: _isOpenedFor(const CookieType.cheering()),),
+      CookieButtonData(top: height * 0.22, left: width * 0.55, isOpened: _isOpenedFor(const CookieType.comfort()),),
+      CookieButtonData(top: height * 0.42, left: width * 0.15, isOpened: _isOpenedFor(const CookieType.passion()),),
       /*
       CookieButtonData(top: maxHeight * 0.30, left: maxWidth * 0.55, isOpened: cookieData.isSermonOpened),
       CookieButtonData(top: maxHeight * 0.45, left: (maxWidth * 0.7) / 2, isOpened: cookieData.isRandomsOpened),*/
