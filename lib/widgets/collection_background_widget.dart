@@ -7,12 +7,14 @@ class CollectionWidget extends StatefulWidget {
   final List<CollectionData> items;
   final double screenWidth;
   final double screenHeight;
+  final bool isCollected;
 
   const CollectionWidget({
     super.key,
     required this.items,
     required this.screenWidth,
-    required this.screenHeight
+    required this.screenHeight,
+    required this.isCollected
   });
 
   @override
@@ -24,6 +26,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final List<Widget> _backgroundWidgets;
   late final double screenWidth;
   late final double screenHeight;
+  List<CollectionData> collectionList = [];
 
 
   double _scrollOffset = 0.0;
@@ -45,7 +48,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final list = widget.items;
+    collectionList = _modifyList();
     return _scrollBody();
   }
 
@@ -117,11 +120,11 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         mainAxisSpacing: 8,
         childAspectRatio: 1,
       ),
-      itemCount: widget.items.length,
+      itemCount:collectionList.length,
       itemBuilder: (_, index) =>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: _itemCollectionData(widget.items[index]),
+            child: _itemCollectionData(collectionList[index]),
           ),
     );
   }
@@ -206,7 +209,17 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     const crossAxisCount = 2;
     final cellWidth = maxWidth / crossAxisCount;
     final cellHeight = (cellWidth * 1.3);
-    final rowCount = (widget.items.length / crossAxisCount).ceil();
+    final rowCount = (collectionList.length / crossAxisCount).ceil();
     return cellHeight * rowCount;
+  }
+
+  List<CollectionData> _modifyList(){
+    if(widget.isCollected){
+      final defaultList = widget.items.toList();
+      defaultList.removeWhere((data) => data.type.code == 6);
+      return defaultList;
+    }else{
+      return widget.items;
+    }
   }
 }
