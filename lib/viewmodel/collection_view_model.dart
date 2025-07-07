@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:domain/extension/extension.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
 import 'package:flutter/material.dart';
-import 'package:domain/extension/extension.dart';
 
 class CollectionViewModel extends ChangeNotifier {
   final GetTypeCollectionDataUseCase getTypeCollectionDataUseCase;
@@ -26,19 +26,21 @@ class CollectionViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final localList = await getTypeCollectionDataUseCase.call(type);
-      final fillList = fillCollectionDataListUseCase.call(localList, type);
-      switch (viewType.code){
-        case 1:fillList.sortByNo();
-        case 2 : fillList.sortByDate();
-        case _ :throw ArgumentError('알 수 없는 CollectionViewType 코드: ${viewType.code}');
-      }
-      collectionList = fillList;
+      collectionList = fillCollectionDataListUseCase.call(localList, type);
     } catch (e) {
       error = 'collectionData 가져오기 실패: $e';
     }
     finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  void sortByList() {
+    switch (viewType.code) {
+      case 1:collectionList.sortByNo();
+      case 2 :collectionList.sortByDate();
+      case _ :throw ArgumentError('알 수 없는 CollectionViewType 코드: ${viewType.code}');
     }
   }
 
