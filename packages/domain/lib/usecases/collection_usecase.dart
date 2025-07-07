@@ -6,9 +6,7 @@ import 'package:domain/repository/repository.dart';
 
 class CreateNewCollectionNoUseCase {
   final Repository _repo;
-
   CreateNewCollectionNoUseCase(this._repo);
-
   Future<int> call(CookieType type, int maxNo) async {
     final collection = await _repo.getCollectionData(type.code);
     final collectionNoListSet = collection.map((e) => e.no).toList().toSet();
@@ -16,7 +14,7 @@ class CreateNewCollectionNoUseCase {
 
     if (newCollectionNoList.isNotEmpty) {
       final idx = Random().nextInt(newCollectionNoList.length);
-      return newCollectionNoList[idx] -1;
+      return newCollectionNoList[idx];
     } else {
       return -1;
     }

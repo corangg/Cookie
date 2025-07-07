@@ -26,7 +26,7 @@ class OpenCookieUI extends StatefulWidget {
 }
 
 class _OpenCookieUI extends State<OpenCookieUI> {
-  late final OvenScreenViewModel vm;
+  late final OvenScreenViewModel viewModel;
 
   final Map<int, Offset> _activePointers = {};
   Offset? _firstPointerStart;
@@ -54,7 +54,7 @@ class _OpenCookieUI extends State<OpenCookieUI> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    vm = context.read<OvenScreenViewModel>();
+    viewModel = context.read<OvenScreenViewModel>();
   }
 
   @override
@@ -92,9 +92,9 @@ class _OpenCookieUI extends State<OpenCookieUI> {
     );
   }
   Widget _messageView() {
-    final no = vm.newCookieNo;
+    final no = viewModel.newCookieNo;
     final list = AppStrings.getCookieMessageList(widget.cookieInfo.type.code);
-    final message = (no == null || no >= list.length) ? AppStrings.errorCookieMessage : list[no];
+    final message = (no == null || no > list.length) ? AppStrings.errorCookieMessage : list[no-1];
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -181,7 +181,8 @@ class _OpenCookieUI extends State<OpenCookieUI> {
         if (_animIndex >= _openCookieImages.length - 1) {
           _isOpened = true;
           timer.cancel();
-          vm.updateDateCookieInfo(widget.cookieInfo.type);
+          viewModel.updateDateCookieInfo(widget.cookieInfo.type);
+          viewModel.upsertCollectionData(widget.cookieInfo.type);
         }
       });
     });

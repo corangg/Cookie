@@ -80,6 +80,10 @@ class OvenScreenViewModel extends ChangeNotifier {
     }
   }
 
+  void setNewCookieNo(int no){
+    _newCookieNo = no;
+  }
+
   Future<void> upsertCollectionData(CookieType type) async {
     isLoading = true;
     notifyListeners();

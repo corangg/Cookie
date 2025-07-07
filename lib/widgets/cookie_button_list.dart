@@ -54,8 +54,14 @@ class _CookieButtonList extends State<CookieButtonList>{
               width: widget.maxWidth * 0.3,
               height: widget.maxHeight * 0.3,
               onPressed: () {
+                //if()
+                final cookieData = viewModel.cookie;
                 final type = CookieType.fromCode(index +1);
-                viewModel.generateNewCookieNo(type, AppStrings.getCookieMessageList(type.code).length);
+                if(cookieData.infos[index].isOpened){
+                  viewModel.setNewCookieNo(cookieData.infos[index].no);
+                }else{
+                  viewModel.generateNewCookieNo(type, AppStrings.getCookieMessageList(type.code).length);
+                }
                 if (viewModel.newCookieNo == -1) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       showAllCollectionMessage()
