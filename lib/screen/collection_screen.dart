@@ -16,7 +16,11 @@ class CollectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CollectionViewModel>(
-      create: (_) => sl<CollectionViewModel>(),
+      create: (_) {
+        final vm = sl<CollectionViewModel>();
+        vm.setCollectionList(CookieType.fromCode(1));
+        return vm;
+      },
       child: const _CollectionBody(),
     );
   }
@@ -36,13 +40,13 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   @override
   void initState() {
     viewModel = sl<CollectionViewModel>();
+    viewModel.setCollectionList(CookieType.fromCode(1));
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    viewModel.setCollectionList(CookieType.fromCode(1));
   }
 
   @override
@@ -77,14 +81,9 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   }
 
   Widget _buildBody() {
-    final screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Stack(
       children: [
         Positioned(

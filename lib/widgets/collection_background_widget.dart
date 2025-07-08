@@ -28,7 +28,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final double screenHeight;
   List<CollectionData> collectionList = [];
 
-
   double _scrollOffset = 0.0;
 
   @override

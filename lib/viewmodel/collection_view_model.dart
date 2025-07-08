@@ -9,7 +9,8 @@ class CollectionViewModel extends ChangeNotifier {
   final GetTypeCollectionDataUseCase getTypeCollectionDataUseCase;
   final FillCollectionDataListUseCase fillCollectionDataListUseCase;
 
-  List<CollectionData> collectionList = [];
+  List<CollectionData> _collectionList = [];
+  List<CollectionData> get collectionList => _collectionList;
 
   CollectionViewType viewType = CollectionViewTypeNo();
 
@@ -25,10 +26,13 @@ class CollectionViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final localList = await getTypeCollectionDataUseCase.call(type);
-      collectionList = fillCollectionDataListUseCase.call(localList, type);
+      final localList = await getTypeCollectionDataUseCase(type);
+      _collectionList = fillCollectionDataListUseCase(localList, type);
+      notifyListeners();
     } catch (e) {
       error = 'collectionData 가져오기 실패: $e';
+      isLoading = false;
+      notifyListeners();
     }
     finally {
       isLoading = false;
