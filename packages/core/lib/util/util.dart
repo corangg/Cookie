@@ -1,3 +1,5 @@
+typedef IntCallback = void Function(int value);
+
 DateTime stringToDateTime(String dateString) {
   final year = int.parse(dateString.substring(0, 4));
   final month = int.parse(dateString.substring(4, 6));
@@ -10,4 +12,8 @@ DateTime createTodayDate() {
   return DateTime(now.year, now.month, now.day);
 }
 
-typedef IntCallback = void Function(int value);
+DateTime getTodayMidnight() {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  return today.add(const Duration(days: 1));
+}

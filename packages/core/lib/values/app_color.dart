@@ -14,4 +14,6 @@ class AppColor {
   static const checkboxCheck = Color(0xFFEEB85E);
 
   static const collectionCookieButton = Color(0xFFEEB85E);
+
+  static const countDown = Color(0x99888888);
 }

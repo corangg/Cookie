@@ -6,7 +6,10 @@ import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:provider/provider.dart';
+import 'package:core/util/util.dart';
 
 class OvenScreen extends StatelessWidget {
   const OvenScreen({super.key});
@@ -32,6 +35,8 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
   late Animation<Offset> _offsetAnimation;
 
   late final OvenScreenViewModel viewModel;
+
+  final DateTime midNightTime = getTodayMidnight();
 
   int _selectCookieType = -1;
 
@@ -121,6 +126,11 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Stack(children: [
+
+      Positioned(
+          top: 0,
+          right: screenWidth*0.05,
+          child: _countDownTimer()),
       _buildAnimatedContent(screenWidth, screenHeight),
       if (0 <= _selectCookieType && _selectCookieType < cookieImageDataList.length)
         OpenCookieUI(
@@ -176,6 +186,24 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
       width: imgWidth,
       height: imgHeight,
       child: Image.asset(AppAssets.imgTray, fit: BoxFit.contain),
+    );
+  }
+
+  Widget _countDownTimer(){
+    final endTimestamp = midNightTime.millisecondsSinceEpoch;
+    return CountdownTimer(
+      endTime: endTimestamp,
+      widgetBuilder: (_, CurrentRemainingTime? time) {
+        if (time == null) {
+          return throw ArgumentError('카운트 다운 타이머 에러');
+        }
+        final hours = time.hours?.toString().padLeft(2, '0') ?? "00";
+        final min   = time.min?.toString().padLeft(2, '0')   ?? "00";
+        final sec   = time.sec?.toString().padLeft(2, '0')   ?? "00";
+        return Text("$hours:$min:$sec",
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: AppColor.countDown),
+        );
+      },
     );
   }
 }
