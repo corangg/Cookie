@@ -12,6 +12,7 @@ class AppStrings {
   //message
   static const allCollectionMessage = '모든 쿠키를 수집 했어요!';
   static const errorCookieMessage = '죄송합니다. 오류가 발생했어요';
+  static const updateCookieMessage = '새로운 쿠키가 준비 됐어요. 쿠키를 확인해 보세요!';
 
   static const textShowCollectionCookie = '수집한 쿠키만 보기';
 

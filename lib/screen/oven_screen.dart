@@ -10,6 +10,7 @@ import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:provider/provider.dart';
 import 'package:core/util/util.dart';
+import 'package:core/values/app_string.dart';
 
 class OvenScreen extends StatelessWidget {
   const OvenScreen({super.key});
@@ -36,9 +37,8 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
 
   late final OvenScreenViewModel viewModel;
 
-  final DateTime midNightTime = getTodayMidnight();
-
   int _selectCookieType = -1;
+  DateTime _midNightTime = getTodayMidnight();
 
   final List<CookieImageAssetsData> cookieImageDataList = [
     CookieImageAssetsData(
@@ -131,7 +131,7 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
           top: 0,
           right: screenWidth*0.05,
           child: _countDownTimer()),
-      _buildAnimatedContent(screenWidth, screenHeight),
+      //_buildAnimatedContent(screenWidth, screenHeight),
       if (0 <= _selectCookieType && _selectCookieType < cookieImageDataList.length)
         OpenCookieUI(
             openCookieUIData: OpenCookieUIData(screenWidth, screenHeight, cookieImageDataList[_selectCookieType],),
@@ -190,12 +190,12 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
   }
 
   Widget _countDownTimer(){
-    final endTimestamp = midNightTime.millisecondsSinceEpoch;
+    final endTimestamp = _midNightTime.millisecondsSinceEpoch;
     return CountdownTimer(
       endTime: endTimestamp,
       widgetBuilder: (_, CurrentRemainingTime? time) {
         if (time == null) {
-          return throw ArgumentError('카운트 다운 타이머 에러');
+          return const SizedBox.shrink();
         }
         final hours = time.hours?.toString().padLeft(2, '0') ?? "00";
         final min   = time.min?.toString().padLeft(2, '0')   ?? "00";
@@ -204,6 +204,27 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: AppColor.countDown),
         );
       },
+      onEnd: (){
+        setState(() {
+          _midNightTime = getTodayMidnight();
+          ScaffoldMessenger.of(context).showSnackBar(
+            //추후 노티피케이션 메세지 발생하도록 해야할듯?
+            showUpdateCookieMessage()//도 오버레이 메세지로 ui 띄우는게 맞을듯?
+          );
+        });
+      },
+    );
+  }
+
+  showUpdateCookieMessage() {
+    return SnackBar(
+      content: const Text(AppStrings.updateCookieMessage, textAlign: TextAlign.center, style: TextStyle(color: AppColor.mainButtonBorder),),
+      backgroundColor: AppColor.mainButtonBackground,
+      duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(
+          horizontal: 40, vertical: 8),
     );
   }
 }
