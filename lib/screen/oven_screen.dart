@@ -207,6 +207,7 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
       onEnd: (){
         setState(() {
           _midNightTime = getTodayMidnight();
+          viewModel.upsertTodayCookie();
           ScaffoldMessenger.of(context).showSnackBar(
             //추후 노티피케이션 메세지 발생하도록 해야할듯?
             showUpdateCookieMessage()//도 오버레이 메세지로 ui 띄우는게 맞을듯?
