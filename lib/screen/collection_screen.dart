@@ -36,6 +36,7 @@ class _CollectionBody extends StatefulWidget {
 class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin {
   late final CollectionViewModel viewModel;
   bool _isChecked = false;
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -51,17 +52,20 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.mainBackground,
-      appBar: _buildAppBar(),
-      body: SafeArea(child: Consumer<CollectionViewModel>(builder: (_, vm, _) {
-        if (vm.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return _buildBody();
-        }
-      })),
-    );
+    return PrimaryScrollController(
+        controller: _controller,
+        child: Scaffold(
+          backgroundColor: AppColor.mainBackground,
+          appBar: _buildAppBar(),
+          body: SafeArea(
+              child: Consumer<CollectionViewModel>(builder: (_, vm, _) {
+                if (vm.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return _buildBody();
+                }
+              })),
+        ));
   }
 
   AppBar _buildAppBar() {
@@ -127,6 +131,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
               onChanged: (bool? newValue,) {
                 setState(() {
                   _isChecked = newValue!;
+                  _scrollToTop();
                 });
               }),
           Text(
@@ -168,6 +173,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
         setState(() {
           viewModel.setCollectionViewType(CollectionViewType.fromCode(selected+1));
           viewModel.sortByList();
+          _scrollToTop();
         });
       },
     );
@@ -204,11 +210,18 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                     setState(() {
                       viewModel.setCollectionList(CookieType.fromCode(index + 1));
                       viewModel.sortByList();
+                      _scrollToTop();
                     });
                   },
                 )
             );
           }),
     );
+  }
+
+  void _scrollToTop() {
+    if (_controller.hasClients) {
+      _controller.jumpTo(0);
+    }
   }
 }

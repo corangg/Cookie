@@ -22,7 +22,7 @@ class CollectionWidget extends StatefulWidget {
 }
 
 class _CollectionBackgroundWidget extends State<CollectionWidget> {
-  final ScrollController _controller = ScrollController();
+  //final ScrollController _controller = ScrollController();
   List<Widget> _backgroundWidgets =[];
   late final double screenWidth;
   late final double screenHeight;
@@ -39,7 +39,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    //_controller.dispose();
     super.dispose();
   }
 
@@ -67,7 +67,8 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
       },
       child: canScroll?
       SingleChildScrollView(
-        controller: _controller,
+        //controller: _controller,
+        primary: true,
         child: SizedBox(
           width: maxWidth,
           height: scrollHeight,
@@ -185,7 +186,9 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   }
 
   double _getScrollValue(double scrollHeight, double viewHeight) {
-    final maxScroll = _controller.hasClients ? _controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
+    final controller = PrimaryScrollController.of(context);
+    //final maxScroll = _controller.hasClients ? _controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
+    final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
     final offset = _scrollOffset.clamp(0.0, maxScroll);
     return maxScroll > 0 ? (offset / maxScroll).clamp(0.0, 1.0) : 0.0;
   }

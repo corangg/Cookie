@@ -131,7 +131,7 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
           top: 0,
           right: screenWidth*0.05,
           child: _countDownTimer()),
-      //_buildAnimatedContent(screenWidth, screenHeight),
+      _buildAnimatedContent(screenWidth, screenHeight),
       if (0 <= _selectCookieType && _selectCookieType < cookieImageDataList.length)
         OpenCookieUI(
             openCookieUIData: OpenCookieUIData(screenWidth, screenHeight, cookieImageDataList[_selectCookieType],),
