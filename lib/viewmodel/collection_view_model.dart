@@ -28,13 +28,9 @@ class CollectionViewModel extends ChangeNotifier {
     try {
       final localList = await getTypeCollectionDataUseCase(type);
       _collectionList = fillCollectionDataListUseCase(localList, type);
-      notifyListeners();
     } catch (e) {
       error = 'collectionData 가져오기 실패: $e';
-      isLoading = false;
-      notifyListeners();
-    }
-    finally {
+    } finally {
       isLoading = false;
       notifyListeners();
     }
@@ -46,6 +42,7 @@ class CollectionViewModel extends ChangeNotifier {
       case 2 :collectionList.sortByDate();
       case _ :throw ArgumentError('알 수 없는 CollectionViewType 코드: ${viewType.code}');
     }
+    notifyListeners();
   }
 
   void setCollectionViewType(CollectionViewType type){

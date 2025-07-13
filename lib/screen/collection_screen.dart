@@ -13,14 +13,11 @@ import 'package:provider/provider.dart';
 
 class CollectionScreen extends StatelessWidget {
   const CollectionScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CollectionViewModel>(
-      create: (_) {
-        final vm = sl<CollectionViewModel>();
-        vm.setCollectionList(CookieType.fromCode(1));
-        return vm;
-      },
+      create: (_) => sl<CollectionViewModel>(),
       child: const _CollectionBody(),
     );
   }
@@ -40,9 +37,9 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
 
   @override
   void initState() {
-    viewModel = sl<CollectionViewModel>();
-    viewModel.setCollectionList(CookieType.fromCode(1));
     super.initState();
+    viewModel = context.read<CollectionViewModel>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {viewModel.setCollectionList(CookieType.fromCode(1));});
   }
 
   @override
@@ -62,7 +59,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 if (vm.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else {
-                  return _buildBody();
+                  return _buildBody(vm);
                 }
               })),
         ));
@@ -84,7 +81,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(CollectionViewModel vm) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -103,7 +100,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             left: 0,
             right: 0,
             bottom: screenHeight * 0.1,
-            child: CollectionWidget(items: viewModel.collectionList,screenWidth: screenWidth,screenHeight: screenHeight*0.84,isCollected: _isChecked,)),
+            child: CollectionWidget(items: vm.collectionList,screenWidth: screenWidth,screenHeight: screenHeight*0.84,isCollected: _isChecked,)),
         Positioned(
             left: 0,
             right: 0,
@@ -128,11 +125,9 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 return const BorderSide(
                     color: AppColor.bottomNavigationBarBorder, width: 3);
               }),
-              onChanged: (bool? newValue,) {
-                setState(() {
-                  _isChecked = newValue!;
-                  _scrollToTop();
-                });
+              onChanged: (newValue,) {
+                setState(() {_isChecked = newValue!;});
+                WidgetsBinding.instance.addPostFrameCallback((_) {_scrollToTop();});
               }),
           Text(
             AppStrings.textShowCollectionCookie,
@@ -169,9 +164,10 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       dropdownItemTextWeight: FontWeight.w900,
       selectItemIconColor: AppColor.bottomNavigationBarBorder,
       selectItemIconSize: 14,
-      onSelected: (selected){
-        setState(() {
-          viewModel.setCollectionViewType(CollectionViewType.fromCode(selected+1));
+      onSelected: (selected) {
+        viewModel.setCollectionViewType(CollectionViewType.fromCode(selected+1));
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           viewModel.sortByList();
           _scrollToTop();
         });
@@ -206,9 +202,10 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 alignment: Alignment.center,
                 child: CustomImageButton(
                   imgAssets: item, width: itemWidth * 0.5, height: itemWidth * 0.5,
-                  onPressed: () {
-                    setState(() {
-                      viewModel.setCollectionList(CookieType.fromCode(index + 1));
+                  onPressed: () async {
+                    await viewModel.setCollectionList(CookieType.fromCode(index + 1));
+
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
                       viewModel.sortByList();
                       _scrollToTop();
                     });
