@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:core/base/baseViewModel.dart';
 import 'package:domain/extension/extension.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
-import 'package:flutter/material.dart';
 
-class CollectionViewModel extends ChangeNotifier {
+class CollectionViewModel extends BaseViewModel {
   final GetTypeCollectionDataUseCase getTypeCollectionDataUseCase;
   final FillCollectionDataListUseCase fillCollectionDataListUseCase;
 
@@ -14,26 +14,16 @@ class CollectionViewModel extends ChangeNotifier {
 
   CollectionViewType viewType = CollectionViewTypeNo();
 
-  bool isLoading = false;
-  String? error;
-
   CollectionViewModel({
     required this.getTypeCollectionDataUseCase,
     required this.fillCollectionDataListUseCase
   });
 
-  Future<void> setCollectionList(CookieType type) async {
-    isLoading = true;
-    notifyListeners();
-    try {
+  Future<void> setCollectionList(CookieType type) {
+    return onWork(() async {
       final localList = await getTypeCollectionDataUseCase(type);
       _collectionList = fillCollectionDataListUseCase(localList, type);
-    } catch (e) {
-      error = 'collectionData 가져오기 실패: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+    });
   }
 
   void sortByList() {

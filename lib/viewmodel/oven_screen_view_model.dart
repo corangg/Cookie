@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:core/base/baseViewModel.dart';
 import 'package:core/util/util.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
 import 'package:domain/usecases/cookie_usecase.dart';
-import 'package:flutter/cupertino.dart';
 
-class OvenScreenViewModel extends ChangeNotifier {
+class OvenScreenViewModel extends BaseViewModel {
   final GetCookieDataUseCase getUseCase;
   final UpsertCookieDataUseCase upsertCookieDataUseCase;
   final UpdateOpenCookieDataUseCase updateOpenCookieDataUseCase;
@@ -16,8 +16,6 @@ class OvenScreenViewModel extends ChangeNotifier {
   StreamSubscription<CookieData>? _todaySub;
 
   CookieData cookie;
-  bool isLoading = false;
-  String? error;
 
   int? _newCookieNo;
   int? get newCookieNo => _newCookieNo;
@@ -33,84 +31,46 @@ class OvenScreenViewModel extends ChangeNotifier {
     _startTodayListener();
   }
 
-  void _startTodayListener() {
-    isLoading = true;
-    notifyListeners();
-
-    _todaySub = getTodayCookieDataUseCase.call().listen((data) {
+  Future<void> _startTodayListener() {
+    return onWork(() async {
+      _todaySub = getTodayCookieDataUseCase().listen((data) {
         cookie = data;
         isLoading = false;
         notifyListeners();
-      },
-      onError: (e) {
-        error = '오늘 데이터 스트림 오류: $e';
-        isLoading = false;
-        notifyListeners();
-      },
-    );
+      });
+    });
   }
 
-  Future<void> updateDateCookieInfo(CookieType type) async {
-    isLoading = true;
-    notifyListeners();
-
-    final cookieInfo = DateCookieInfo(type: type, isOpened: true, no: newCookieNo ?? -1);
-
-    try {
-      updateOpenCookieDataUseCase.call(cookieInfo);
-    } catch (e) {
-      error = '업데이트 실패: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+  Future<void> updateDateCookieInfo(CookieType type) {
+    return onWork(() async {
+      final cookieInfo = DateCookieInfo(type: type, isOpened: true, no: newCookieNo ?? -1);
+      updateOpenCookieDataUseCase(cookieInfo);
+    });
   }
 
-  Future<void> generateNewCookieNo(CookieType type, int collectionSize) async {
-    isLoading = true;
-    notifyListeners();
-    try {
+  Future<void> generateNewCookieNo(CookieType type, int collectionSize) {
+    return onWork(() async {
       final no = await createNewCollectionNoUseCase(type, collectionSize);
       _newCookieNo = no;
-    }catch (e) {
-      error = '생성 실패: $e';
-    }  finally {
-      isLoading = false;
-      notifyListeners();
-    }
+    });
+  }
+
+  Future<void> upsertCollectionData(CookieType type) {
+    return onWork(() async {
+      final data = CollectionData(type: type, no: newCookieNo ?? -1, date: createTodayDate(),);
+      await upsertCollectionUseCase(data);
+    });
+  }
+
+  Future<void> upsertTodayCookie() {
+    return onWork(() async {
+      final cookie = CookieData.empty();
+      upsertCookieDataUseCase(cookie);
+    });
   }
 
   void setNewCookieNo(int no){
     _newCookieNo = no;
-  }
-
-  Future<void> upsertCollectionData(CookieType type) async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      final collectionData = CollectionData(type: type, no: newCookieNo?? -1 , date: createTodayDate());
-      upsertCollectionUseCase.call(collectionData);
-
-    } catch (e) {
-      error = 'Collection Upsert Failed: $e';
-    } finally {
-      isLoading=false;
-      notifyListeners();
-    }
-  }
-
-  Future<void> upsertTodayCookie() async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      final cookie = CookieData.empty();
-      upsertCookieDataUseCase(cookie);
-    } catch (e) {
-      error = 'Cookie Upsert Failed: $e';
-    } finally {
-      isLoading=false;
-      notifyListeners();
-    }
   }
 
   @override
