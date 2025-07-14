@@ -76,7 +76,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
             alignment: Alignment.center,
             children: [
               IndexedStack(
-                  index: _getScrollIndex(scrollValue),
+                  index: _getScrollSection(scrollHeight, viewHeight),//_getScrollIndex(scrollValue),
                   children: _backgroundWidgets),
               Positioned(
                   top: heightPaddingValue,
@@ -192,6 +192,19 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
     final offset = _scrollOffset.clamp(0.0, maxScroll);
     return maxScroll > 0 ? (offset / maxScroll).clamp(0.0, 1.0) : 0.0;
+  }
+
+  int _getScrollSection(double scrollHeight, double viewHeight) {
+    final controller = PrimaryScrollController.of(context);
+    final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - viewHeight).clamp(0.0, 1.0);
+    final offset = _scrollOffset.clamp(0.0, maxScroll);
+    if (offset <= viewHeight * 0.1) {
+      return 0;
+    } else if (offset >= maxScroll - viewHeight * 0.1) {
+      return 2;
+    } else {
+      return 1;
+    }
   }
 
   void _setScreenValue(){
