@@ -22,19 +22,21 @@ class CollectionWidget extends StatefulWidget {
 }
 
 class _CollectionBackgroundWidget extends State<CollectionWidget> {
-  //final ScrollController _controller = ScrollController();
   List<Widget> _backgroundWidgets =[];
+  List<CollectionData> collectionList = [];
+
   late final double screenWidth;
   late final double screenHeight;
-  List<CollectionData> collectionList = [];
+  late final double itemWidth;
+  late final double itemHeight;
+  late final int crossAxisCount;
 
   double _scrollOffset = 0.0;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    screenWidth = widget.screenWidth;
-    screenHeight = widget.screenHeight;
+    _setScreenValue();
   }
 
   @override
@@ -53,7 +55,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   Widget _scrollBody(){
     final heightPaddingValue = screenHeight * 0.04;
     final maxWidth = screenWidth * 0.9;
-    const crossAxisCount = 2;
 
     final scrollHeight = _calculateScrollHeight();
     final viewHeight   = screenHeight - heightPaddingValue;
@@ -67,7 +68,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
       },
       child: canScroll?
       SingleChildScrollView(
-        //controller: _controller,
         primary: true,
         child: SizedBox(
           width: maxWidth,
@@ -80,16 +80,15 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
                   children: _backgroundWidgets),
               Positioned(
                   top: heightPaddingValue,
-                  left: screenWidth * 0.10,
-                  right: screenWidth * 0.10,
+                  left: screenWidth * 0.1,
+                  right: screenWidth * 0.1,
                   bottom: 0,
-                  child: _collectionGridView(crossAxisCount)
+                  child: _collectionGridView()
               )
             ],
           ),
         ),
-      ):
-      Stack(
+      ): Stack(
         alignment: Alignment.center,
         children: [
           Positioned(
@@ -97,31 +96,34 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
               left: screenWidth * 0,
               right: screenWidth * 0,
               bottom: 0,
-              child: Image.asset(AppAssets.imgCollectionBackground, width: maxWidth, height: viewHeight, fit: BoxFit.fill, gaplessPlayback: true)),
+              child: Image.asset(
+                  AppAssets.imgCollectionBackground, width: maxWidth,
+                  height: viewHeight,
+                  fit: BoxFit.fill,
+                  gaplessPlayback: true)),
           Positioned(
               top: heightPaddingValue,
               left: screenWidth * 0.1,
               right: screenWidth * 0.1,
               bottom: heightPaddingValue,
-              child: _collectionGridView(crossAxisCount))
+              child: _collectionGridView())
         ],
       ),
     );
   }
 
-  Widget _collectionGridView(int crossAxisCount) {
+  Widget _collectionGridView() {
     return GridView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate:
-      SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: 8,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        mainAxisExtent: itemHeight,
         mainAxisSpacing: 8,
-        childAspectRatio: 1,
+        maxCrossAxisExtent: itemWidth,
+        crossAxisSpacing: 8,
       ),
-      itemCount:collectionList.length,
+      itemCount: collectionList.length,
       itemBuilder: (_, index) =>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -187,10 +189,17 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   double _getScrollValue(double scrollHeight, double viewHeight) {
     final controller = PrimaryScrollController.of(context);
-    //final maxScroll = _controller.hasClients ? _controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
     final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
     final offset = _scrollOffset.clamp(0.0, maxScroll);
     return maxScroll > 0 ? (offset / maxScroll).clamp(0.0, 1.0) : 0.0;
+  }
+
+  void _setScreenValue(){
+    screenWidth = widget.screenWidth;
+    screenHeight = widget.screenHeight;
+    itemWidth = screenWidth * 0.4;
+    itemHeight = itemWidth;
+    crossAxisCount = screenWidth ~/ itemWidth;
   }
 
   void _setBackgroundWidgets(double screenWidth){
@@ -204,16 +213,14 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   }
 
   int _getScrollIndex(double scrollValue) {
-    return scrollValue < 0.1 ? 0 : scrollValue < 0.9 ? 1 : 2;
+    return scrollValue < 0.1 ? 0 : scrollValue < 0.9 ? 1 : 2;// 이거 scrollValue로 하지 말고 실제 뷰 길이로 나눠야 할듯?
   }
 
   double _calculateScrollHeight() {
-    final maxWidth = screenWidth * 0.8;
-    const crossAxisCount = 2;
-    final cellWidth = maxWidth / crossAxisCount;
-    final cellHeight = (cellWidth * 1.3);
+    final scrollBottomPadding = screenHeight * 0.1;
     final rowCount = (collectionList.length / crossAxisCount).ceil();
-    return cellHeight * rowCount;
+    final scrollHeight = (itemHeight + 8) * rowCount + scrollBottomPadding;
+    return scrollHeight;
   }
 
   List<CollectionData> _modifyList(){
