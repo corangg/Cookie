@@ -30,6 +30,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   late final double itemWidth;
   late final double itemHeight;
   late final int crossAxisCount;
+  late final double bottomPaddingValue;
 
   double _scrollOffset = 0.0;
 
@@ -53,13 +54,12 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
   }
 
   Widget _scrollBody(){
-    final heightPaddingValue = screenHeight * 0.04;
+    final topPaddingValue = screenHeight * 0.04;
     final maxWidth = screenWidth * 0.9;
 
     final scrollHeight = _calculateScrollHeight();
-    final viewHeight   = screenHeight - heightPaddingValue;
+    final viewHeight   = screenHeight - topPaddingValue/*( + bottomPaddingValue)*/;
     final canScroll    = scrollHeight > viewHeight;
-    final scrollValue = _getScrollValue(scrollHeight, viewHeight);
 
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollInfo) {
@@ -79,7 +79,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
                   index: _getScrollSection(scrollHeight, viewHeight),//_getScrollIndex(scrollValue),
                   children: _backgroundWidgets),
               Positioned(
-                  top: heightPaddingValue,
+                  top: topPaddingValue,
                   left: screenWidth * 0.1,
                   right: screenWidth * 0.1,
                   bottom: 0,
@@ -102,10 +102,10 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
                   fit: BoxFit.fill,
                   gaplessPlayback: true)),
           Positioned(
-              top: heightPaddingValue,
+              top: topPaddingValue,
               left: screenWidth * 0.1,
               right: screenWidth * 0.1,
-              bottom: heightPaddingValue,
+              //bottom: heightPaddingValue,
               child: _collectionGridView())
         ],
       ),
@@ -187,13 +187,6 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     );
   }
 
-  double _getScrollValue(double scrollHeight, double viewHeight) {
-    final controller = PrimaryScrollController.of(context);
-    final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - (viewHeight)).clamp(0.0, 1.0);
-    final offset = _scrollOffset.clamp(0.0, maxScroll);
-    return maxScroll > 0 ? (offset / maxScroll).clamp(0.0, 1.0) : 0.0;
-  }
-
   int _getScrollSection(double scrollHeight, double viewHeight) {
     final controller = PrimaryScrollController.of(context);
     final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - viewHeight).clamp(0.0, 1.0);
@@ -207,9 +200,10 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     }
   }
 
-  void _setScreenValue(){
+  void _setScreenValue() {
     screenWidth = widget.screenWidth;
     screenHeight = widget.screenHeight;
+    bottomPaddingValue = screenHeight * 0.1;
     itemWidth = screenWidth * 0.4;
     itemHeight = itemWidth;
     crossAxisCount = screenWidth ~/ itemWidth;
@@ -225,14 +219,9 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     ];
   }
 
-  int _getScrollIndex(double scrollValue) {
-    return scrollValue < 0.1 ? 0 : scrollValue < 0.9 ? 1 : 2;// 이거 scrollValue로 하지 말고 실제 뷰 길이로 나눠야 할듯?
-  }
-
   double _calculateScrollHeight() {
-    final scrollBottomPadding = screenHeight * 0.1;
     final rowCount = (collectionList.length / crossAxisCount).ceil();
-    final scrollHeight = (itemHeight + 8) * rowCount + scrollBottomPadding;
+    final scrollHeight = (itemHeight + 8) * rowCount + bottomPaddingValue;
     return scrollHeight;
   }
 

@@ -40,7 +40,7 @@ class AppStrings {
     'cheeringTest6',
     'cheeringTest7',
     'cheeringTest8',
-    'cheeringTest9',
+  /*  'cheeringTest9',
     'cheeringTest10',
     'cheeringTest11',
     'cheeringTest12',
@@ -61,7 +61,7 @@ class AppStrings {
     'cheeringTest27',
     'cheeringTest28',
     'cheeringTest29',
-    'cheeringTest30',
+    'cheeringTest30',*/
     /*'cheeringTest1',
     'cheeringTest2',
     'cheeringTest3',
