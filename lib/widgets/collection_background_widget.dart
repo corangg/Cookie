@@ -42,14 +42,18 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
 
   @override
   void dispose() {
-    //_controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     collectionList = _modifyList();
-    _setBackgroundWidgets(screenWidth);
+    final rowCount = (collectionList.length / crossAxisCount).ceil();
+    if(rowCount == 4){
+      _set4ColumnBackgroundWidgets(screenWidth);
+    }else{
+      _setBackgroundWidgets(screenWidth);
+    }
     return _scrollBody();
   }
 
@@ -58,7 +62,7 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     final maxWidth = screenWidth * 0.9;
 
     final scrollHeight = _calculateScrollHeight();
-    final viewHeight   = screenHeight - topPaddingValue/*( + bottomPaddingValue)*/;
+    final viewHeight = screenHeight - screenHeight* 0.2;
     final canScroll    = scrollHeight > viewHeight;
 
     return NotificationListener<ScrollNotification>(
@@ -187,6 +191,20 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
     );
   }
 
+  Widget buildBackgroundImage({
+    required String assetPath,
+    required double width,
+    required Alignment alignment,
+  }) {
+    return Image.asset(
+      assetPath,
+      width: width,
+      fit: BoxFit.fitWidth,
+      alignment: alignment,
+      gaplessPlayback: true,
+    );
+  }
+
   int _getScrollSection(double scrollHeight, double viewHeight) {
     final controller = PrimaryScrollController.of(context);
     final maxScroll = controller.hasClients ? controller.position.maxScrollExtent : (scrollHeight - viewHeight).clamp(0.0, 1.0);
@@ -216,6 +234,16 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
       buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundTop, width: maxWidth, height: scrollHeight, alignment: Alignment.topCenter),
       Image.asset(AppAssets.imgCollectionBackgroundMid, width: maxWidth, height: scrollHeight, fit: BoxFit.fill, gaplessPlayback: true),
       buildCroppedFitWidthImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, height: scrollHeight, alignment: Alignment.bottomCenter),
+    ];
+  }
+
+  void _set4ColumnBackgroundWidgets(double screenWidth){//해당 함수는 현재 해결 하지 못한 문제로 인한 임시 조치 입니다. 추후 _setBackgroundWidgets 와 합해야 합니다.
+    final maxWidth = screenWidth * 0.9;
+    final scrollHeight = _calculateScrollHeight();
+    _backgroundWidgets = [
+      buildBackgroundImage(assetPath: AppAssets.imgCollectionBackgroundTop, width: maxWidth, alignment: Alignment.topCenter),
+      Image.asset(AppAssets.imgCollectionBackgroundMid, width: maxWidth, height: scrollHeight, fit: BoxFit.fill, gaplessPlayback: true),
+      buildBackgroundImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, alignment: Alignment.bottomCenter),
     ];
   }
 
