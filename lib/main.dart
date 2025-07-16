@@ -1,4 +1,5 @@
 import 'package:cookie/di/injection.dart';
+import 'package:cookie/notification/notification.dart';
 import 'package:cookie/screen/collection_screen.dart';
 import 'package:cookie/screen/oven_screen.dart';
 import 'package:cookie/screen/profile_screen.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
+  await NotificationService().init();
   runApp(const MyApp());
 }
 

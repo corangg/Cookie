@@ -1,9 +1,11 @@
 import 'package:cookie/di/injection.dart';
+import 'package:cookie/notification/notification.dart';
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
 import 'package:cookie/widgets/cookie_button_list.dart';
 import 'package:cookie/widgets/open_cookie_ui.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_id.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:provider/provider.dart';
 import 'package:core/util/util.dart';
 import 'package:core/values/app_string.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class OvenScreen extends StatelessWidget {
   const OvenScreen({super.key});
@@ -71,6 +74,8 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
   void initState() {
     super.initState();
     viewModel = sl<OvenScreenViewModel>();
+    setMidNightNotificationMessage();
+    testAlarm();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -228,4 +233,33 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
           horizontal: 40, vertical: 8),
     );
   }
+
+  setMidNightNotificationMessage(){
+    /*final now = tz.TZDateTime.now(tz.local);
+    final nextMidnight = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day,02,24
+    );
+
+    NotificationService().schedule(
+        id: AppID.midNightNotificationID,
+        title: AppStrings.updateCookieTitleMessage,
+        body: AppStrings.updateCookieTitleMessage,
+        scheduledAt: nextMidnight);*/
+    final when = DateTime.now().add(const Duration(minutes: 1));
+    NotificationService().scheduleAtDateTime(
+      id: 1057,
+      title: 'DateTime 예약 테스트',
+      body: '1분 뒤에 울리나요?',
+      scheduledAt: when,
+    );
+  }
+
+  testAlarm() async{
+    await NotificationService().show(
+      id: 42,
+      title: '즉시 알림 테스트',
+      body: '이게 보이면 권한·채널은 OK',
+    );
+  }
+
 }

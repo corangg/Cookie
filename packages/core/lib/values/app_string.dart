@@ -12,13 +12,17 @@ class AppStrings {
   //message
   static const allCollectionMessage = '모든 쿠키를 수집 했어요!';
   static const errorCookieMessage = '죄송합니다. 오류가 발생했어요';
+  static const updateCookieTitleMessage = '새로운 쿠키가 준비 됐어요!';
+  static const updateCookieBodyMessage = '지금 바로 새로우 쿠키를 확인해 보세요!';
   static const updateCookieMessage = '새로운 쿠키가 준비 됐어요. 쿠키를 확인해 보세요!';
   static const viewModelErrorMessage = 'work Error:';
 
   static const textShowCollectionCookie = '수집한 쿠키만 보기';
 
-  static List<String> viewTypeList = ['번호', '획득 날짜'];
+  //description
+  static const notificationDefaultChannelDescription = '앱의 일반 알림 채널';
 
+  static List<String> viewTypeList = ['번호', '획득 날짜'];
 
   static List<String> getCookieMessageList(int type) {
     return switch (type){
@@ -40,7 +44,7 @@ class AppStrings {
     'cheeringTest6',
     'cheeringTest7',
     'cheeringTest8',
-  /*  'cheeringTest9',
+    'cheeringTest9',
     'cheeringTest10',
     'cheeringTest11',
     'cheeringTest12',
@@ -61,7 +65,7 @@ class AppStrings {
     'cheeringTest27',
     'cheeringTest28',
     'cheeringTest29',
-    'cheeringTest30',*/
+    'cheeringTest30',
     /*'cheeringTest1',
     'cheeringTest2',
     'cheeringTest3',
