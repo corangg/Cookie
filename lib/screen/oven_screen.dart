@@ -75,7 +75,6 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
     super.initState();
     viewModel = sl<OvenScreenViewModel>();
     setMidNightNotificationMessage();
-    testAlarm();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -213,24 +212,8 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
         setState(() {
           _midNightTime = getTodayMidnight();
           viewModel.upsertTodayCookie();
-          ScaffoldMessenger.of(context).showSnackBar(
-            //추후 노티피케이션 메세지 발생하도록 해야할듯?
-            showUpdateCookieMessage()//도 오버레이 메세지로 ui 띄우는게 맞을듯?
-          );
         });
       },
-    );
-  }
-
-  showUpdateCookieMessage() {
-    return SnackBar(
-      content: const Text(AppStrings.updateCookieMessage, textAlign: TextAlign.center, style: TextStyle(color: AppColor.mainButtonBorder),),
-      backgroundColor: AppColor.mainButtonBackground,
-      duration: const Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-      padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.symmetric(
-          horizontal: 40, vertical: 8),
     );
   }
 
