@@ -9,6 +9,8 @@ import 'package:core/widgets/custom_bottom_nav_bar.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: const MainScreen());
+    return MaterialApp(navigatorKey: navigatorKey, home: const MainScreen());
   }
 }
 
