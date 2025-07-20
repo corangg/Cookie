@@ -10,6 +10,7 @@ import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(navigatorKey: navigatorKey, home: const MainScreen());
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      home: const MainScreen(),
+      navigatorObservers: [routeObserver],
+    );
   }
 }
 

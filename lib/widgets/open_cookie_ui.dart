@@ -8,6 +8,7 @@ import 'package:core/values/app_string.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:core/widgets/top_right_close_button.dart';
 
 class OpenCookieUI extends StatefulWidget {
   final OpenCookieUIData openCookieUIData;
@@ -188,18 +189,13 @@ class _OpenCookieUI extends State<OpenCookieUI> {
     });
   }
 
-  Widget _closeButton() {
-    return Positioned(
-      top: 24,
-      right: 24,
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            widget.onClose.call();
-          });
-        },
-        child: const Icon(Icons.close, size: 32, color: Colors.white),
-      ),
+  Widget  _closeButton(){
+    return TopRightCloseButton(
+      onTap: (){
+        setState(() {
+          widget.onClose.call();
+        });
+      },
     );
   }
 

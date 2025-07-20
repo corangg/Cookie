@@ -1,12 +1,15 @@
 import 'package:cookie/di/injection.dart';
+import 'package:cookie/main.dart';
 import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/widgets/collection_background_widget.dart';
 import 'package:core/util/pair.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_size.dart';
 import 'package:core/values/app_string.dart';
 import 'package:core/widgets/custom_img_button.dart';
 import 'package:core/widgets/spinner_widget.dart';
+import 'package:core/widgets/top_right_close_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,21 +33,44 @@ class _CollectionBody extends StatefulWidget {
   State<_CollectionBody> createState() => _CollectionBodyState();
 }
 
-class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin {
+class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProviderStateMixin, RouteAware {
   late final CollectionViewModel viewModel;
   bool _isChecked = false;
   final ScrollController _controller = ScrollController();
+
+  final GlobalKey _bodyKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
+  Rect? _bodyRect;
 
   @override
   void initState() {
     super.initState();
     viewModel = context.read<CollectionViewModel>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {viewModel.setCollectionList(CookieType.fromCode(1));});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.setCollectionList(CookieType.fromCode(1));
+      _calculateBodyRect();
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute != null) {
+      routeObserver.subscribe(this, modalRoute);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _removeOverlay();
+    super.dispose();
+  }
+
+  @override
+  void didPushNext() {
+    _removeOverlay();
   }
 
   @override
@@ -81,11 +107,13 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     );
   }
 
+
+
   Widget _buildBody(CollectionViewModel vm) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     return Stack(
+      key: _bodyKey,
       children: [
         Positioned(
             top: 0,
@@ -100,7 +128,13 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
             left: 0,
             right: 0,
             bottom: screenHeight * 0.1,
-            child: CollectionWidget(items: vm.collectionList,screenWidth: screenWidth,screenHeight: screenHeight*0.84,isCollected: _isChecked,)),
+            child: CollectionWidget(items: vm.collectionList,
+                screenWidth: screenWidth,
+                screenHeight: screenHeight * 0.84,
+                isCollected: _isChecked,
+                onTap: (data) {
+                  _showCollectionCookie(data);
+                })),
         Positioned(
             left: 0,
             right: 0,
@@ -220,5 +254,98 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     if (_controller.hasClients) {
       _controller.jumpTo(0);
     }
+  }
+
+  void _calculateBodyRect() {
+    final renderBox = _bodyKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final size = renderBox.size;
+      final position = renderBox.localToGlobal(Offset.zero);
+      _bodyRect = position & size;
+    }
+  }
+
+  void _showCollectionCookie(CollectionData data) {
+    if (_overlayEntry != null) return;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    _overlayEntry = OverlayEntry(builder: (ctx) {
+      return Positioned.fill(
+        child: Stack(
+          children: [
+            // 그리드 영역만 반투명 배경
+            Positioned(
+              left: _bodyRect?.left,
+              top: _bodyRect?.top,
+              width: _bodyRect?.width,
+              height: _bodyRect?.height,
+              child: Container(color: AppColor.translucentBackground),
+            ),
+
+            // 메시지 팝업은 화면 중앙에 두어, 크기가 내용 따라 자동
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: _bodyRect!.width * 0.8,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      AppAssets.imgTypeOpenCookie(data.type.code),
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 16),
+                    _messageView(data),  // 이 부분이 content 높이만큼만 커집니다
+                  ],
+                ),
+              ),
+            ),
+
+            // 닫기 버튼
+            TopRightCloseButton(onTap: _removeOverlay),
+          ],
+        ),
+      );
+    });
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  Widget _messageView(CollectionData data) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final list = AppStrings.getCookieMessageList(data.type.code);
+    final message = (data.no > list.length) ? AppStrings.errorCookieMessage : list[data.no-1];
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: screenWidth,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppAssets.imgMessagePaper),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSize.cookieMessagePadding,
+            vertical: AppSize.cookieMessagePadding,
+          ),
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.black, fontSize: 14),
+            textAlign: TextAlign.center,
+
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 }

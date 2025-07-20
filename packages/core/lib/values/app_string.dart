@@ -16,6 +16,7 @@ class AppStrings {
   static const updateCookieBodyMessage = '지금 바로 새로우 쿠키를 확인해 보세요!';
   static const updateCookieMessage = '새로운 쿠키가 준비 됐어요. 쿠키를 확인해 보세요!';
   static const viewModelErrorMessage = 'work Error:';
+  static const unCollectedCookieMessage = '아직 수집 하지 못한 쿠키 에요';
 
   static const textShowCollectionCookie = '수집한 쿠키만 보기';
 
@@ -39,7 +40,7 @@ class AppStrings {
     'cheeringTest1',
     'cheeringTest2',
     'cheeringTest3',
-    'cheeringTest4',
+    '가나다라',
     'cheeringTest5',
     'cheeringTest6',
     'cheeringTest7',
@@ -61,7 +62,7 @@ class AppStrings {
     'cheeringTest23',
     'cheeringTest24',
     'cheeringTest25',
-    'cheeringTest26',
+    '마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하',
     'cheeringTest27',
     'cheeringTest28',
     'cheeringTest29',

@@ -1,5 +1,7 @@
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/values/app_string.dart';
+import 'package:core/widgets/top_right_close_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
@@ -8,13 +10,15 @@ class CollectionWidget extends StatefulWidget {
   final double screenWidth;
   final double screenHeight;
   final bool isCollected;
+  final ValueChanged<CollectionData> onTap;
 
   const CollectionWidget({
     super.key,
     required this.items,
     required this.screenWidth,
     required this.screenHeight,
-    required this.isCollected
+    required this.isCollected,
+    required this.onTap
   });
 
   @override
@@ -127,44 +131,55 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         maxCrossAxisExtent: itemWidth,
         crossAxisSpacing: 8,
       ),
-      itemCount: collectionList.length,
-      itemBuilder: (_, index) =>
-          Padding(
+        itemCount: collectionList.length,
+        itemBuilder: (_, index) {
+          final data = collectionList[index];
+          return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: _itemCollectionData(collectionList[index]),
-          ),
+            child: _itemCollectionData(data, onTap: () {
+              if (data.type.code == 6) {
+                ScaffoldMessenger.of(context).showSnackBar(_showUnCollectedCookieMessage());
+              } else {
+                widget.onTap(data);
+              }
+            }),
+          );
+        }
     );
   }
 
-  Widget _itemCollectionData(CollectionData data) {
+  Widget _itemCollectionData(CollectionData data,{required VoidCallback onTap}) {
     final openCookieImg = AppAssets.imgTypeOpenCookie(data.type.code);
-    return AspectRatio(
-        aspectRatio: 1,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(flex: 8, child: Image.asset(openCookieImg)),
-            Expanded(flex: 2, child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColor.collectionCookieButton,
-                      border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 2),
-                      borderRadius: BorderRadius.circular(6)
-                  ),
-                ),
-                Text('No.${data.no}',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: AppColor.mainButtonBorder,
-                      fontWeight: FontWeight.w800
-                  )
-                )
-              ])
-            )
-          ],
-        )
+    return InkWell(
+      onTap: onTap,
+      child: AspectRatio(
+          aspectRatio: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(flex: 8, child: Image.asset(openCookieImg)),
+              Expanded(flex: 2, child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: AppColor.collectionCookieButton,
+                          border: Border.all(color: AppColor.bottomNavigationBarBorder, width: 2),
+                          borderRadius: BorderRadius.circular(6)
+                      ),
+                    ),
+                    Text('No.${data.no}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: AppColor.mainButtonBorder,
+                            fontWeight: FontWeight.w800
+                        )
+                    )
+                  ])
+              )
+            ],
+          )
+      ),
     );
   }
 
@@ -245,6 +260,17 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
       Image.asset(AppAssets.imgCollectionBackgroundMid, width: maxWidth, height: scrollHeight, fit: BoxFit.fill, gaplessPlayback: true),
       buildBackgroundImage(assetPath: AppAssets.imgCollectionBackgroundBottom, width: maxWidth, alignment: Alignment.bottomCenter),
     ];
+  }
+
+  _showUnCollectedCookieMessage(){
+    return SnackBar(
+      content: const Text(AppStrings.unCollectedCookieMessage, textAlign: TextAlign.center, style: TextStyle(color: AppColor.mainButtonBorder),),
+      backgroundColor: AppColor.mainButtonBackground,
+      duration: const Duration(seconds: 1),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.symmetric(
+          horizontal: 40, vertical: 8),
+    );
   }
 
   double _calculateScrollHeight() {
