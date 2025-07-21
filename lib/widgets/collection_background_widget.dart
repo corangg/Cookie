@@ -101,8 +101,8 @@ class _CollectionBackgroundWidget extends State<CollectionWidget> {
         children: [
           Positioned(
               top: 0,
-              left: screenWidth * 0,
-              right: screenWidth * 0,
+              left: screenWidth * 0.05,
+              right: screenWidth * 0.05,
               bottom: 0,
               child: Image.asset(
                   AppAssets.imgCollectionBackground, width: maxWidth,
