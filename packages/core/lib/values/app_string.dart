@@ -36,6 +36,17 @@ class AppStrings {
     };
   }
 
+  static String getCookieType(int type) {
+    return switch (type){
+      1 => '응원',
+      2 => '위로',
+      3 => '열정',
+      4 => '결심',
+      5 => '',
+      _ => throw ArgumentError('알 수 없는 CookieType: $type'),
+    };
+  }
+
   static List<String> cheeringCollectionList = [
     'cheeringTest1',
     'cheeringTest2',

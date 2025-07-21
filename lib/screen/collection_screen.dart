@@ -2,14 +2,13 @@ import 'package:cookie/di/injection.dart';
 import 'package:cookie/main.dart';
 import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/widgets/collection_background_widget.dart';
+import 'package:cookie/widgets/open_collection_ui.dart';
 import 'package:core/util/pair.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
-import 'package:core/values/app_size.dart';
 import 'package:core/values/app_string.dart';
 import 'package:core/widgets/custom_img_button.dart';
 import 'package:core/widgets/spinner_widget.dart';
-import 'package:core/widgets/top_right_close_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,13 +41,14 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   OverlayEntry? _overlayEntry;
   Rect? _bodyRect;
 
+  CollectionData? _openedData;
+
   @override
   void initState() {
     super.initState();
     viewModel = context.read<CollectionViewModel>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       viewModel.setCollectionList(CookieType.fromCode(1));
-      _calculateBodyRect();
     });
   }
 
@@ -64,13 +64,7 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    _removeOverlay();
     super.dispose();
-  }
-
-  @override
-  void didPushNext() {
-    _removeOverlay();
   }
 
   @override
@@ -107,8 +101,6 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     );
   }
 
-
-
   Widget _buildBody(CollectionViewModel vm) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -116,11 +108,11 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
       key: _bodyKey,
       children: [
         Positioned(
-            top: 0,
+            top: 10,
             left: screenWidth * 0.1,
             child: _collectionViewTypeSpinner(screenWidth, screenHeight)),
         Positioned(
-            top: 0,
+            top: 10,
             left: screenWidth * 0.4,
             child: _viewCollectionCheckBox(screenHeight)),
         Positioned(
@@ -133,18 +125,26 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 screenHeight: screenHeight * 0.84,
                 isCollected: _isChecked,
                 onTap: (data) {
-                  _showCollectionCookie(data);
+                  setState(() {
+                    _openedData = data;
+                  });
                 })),
         Positioned(
             left: 0,
             right: 0,
             bottom: 0,
             height: screenHeight * 0.1,
-            child: _cookieTypeListView(AppAssets.cookieTypeAssetsList, screenWidth * 0.2))
+            child: _cookieTypeListView(AppAssets.cookieTypeAssetsList, screenWidth * 0.2)),
+
+        if (_openedData != null)
+          OpenCollectionUI(
+            collectionData: _openedData!,
+            onClose: () => setState(() => _openedData = null),
+          ),
       ],
     );
   }
-  
+
   Widget _viewCollectionCheckBox(double screenHeight) {
     return SizedBox(
       height: screenHeight * 0.04,
@@ -164,9 +164,9 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
                 WidgetsBinding.instance.addPostFrameCallback((_) {_scrollToTop();});
               }),
           Text(
-            AppStrings.textShowCollectionCookie,
-            textAlign: TextAlign.left,
-            style: TextStyle(fontSize: 16, color: AppColor.bottomNavigationBarBorder)),
+              AppStrings.textShowCollectionCookie,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 16, color: AppColor.bottomNavigationBarBorder)),
         ],
       ),
     );
@@ -254,98 +254,5 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
     if (_controller.hasClients) {
       _controller.jumpTo(0);
     }
-  }
-
-  void _calculateBodyRect() {
-    final renderBox = _bodyKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      final size = renderBox.size;
-      final position = renderBox.localToGlobal(Offset.zero);
-      _bodyRect = position & size;
-    }
-  }
-
-  void _showCollectionCookie(CollectionData data) {
-    if (_overlayEntry != null) return;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    _overlayEntry = OverlayEntry(builder: (ctx) {
-      return Positioned.fill(
-        child: Stack(
-          children: [
-            // 그리드 영역만 반투명 배경
-            Positioned(
-              left: _bodyRect?.left,
-              top: _bodyRect?.top,
-              width: _bodyRect?.width,
-              height: _bodyRect?.height,
-              child: Container(color: AppColor.translucentBackground),
-            ),
-
-            // 메시지 팝업은 화면 중앙에 두어, 크기가 내용 따라 자동
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: _bodyRect!.width * 0.8,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      AppAssets.imgTypeOpenCookie(data.type.code),
-                      fit: BoxFit.contain,
-                    ),
-                    const SizedBox(height: 16),
-                    _messageView(data),  // 이 부분이 content 높이만큼만 커집니다
-                  ],
-                ),
-              ),
-            ),
-
-            // 닫기 버튼
-            TopRightCloseButton(onTap: _removeOverlay),
-          ],
-        ),
-      );
-    });
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  Widget _messageView(CollectionData data) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final list = AppStrings.getCookieMessageList(data.type.code);
-    final message = (data.no > list.length) ? AppStrings.errorCookieMessage : list[data.no-1];
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: screenWidth,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppAssets.imgMessagePaper),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSize.cookieMessagePadding,
-            vertical: AppSize.cookieMessagePadding,
-          ),
-          child: Text(
-            message,
-            style: TextStyle(color: Colors.black, fontSize: 14),
-            textAlign: TextAlign.center,
-
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
   }
 }
