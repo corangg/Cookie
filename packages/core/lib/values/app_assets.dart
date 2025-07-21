@@ -25,6 +25,11 @@ class AppAssets {
   static const imgCookiePassion5 = 'assets/img/img_cookie_passion_5.png';
   static const imgCookiePassion6 = 'assets/img/img_cookie_passion_6.png';
   static const imgCookieSermon1 = 'assets/img/img_cookie_sermon_1.png';
+  static const imgCookieSermon2 = 'assets/img/img_cookie_sermon_2.png';
+  static const imgCookieSermon3 = 'assets/img/img_cookie_sermon_3.png';
+  static const imgCookieSermon4 = 'assets/img/img_cookie_sermon_4.png';
+  static const imgCookieSermon5 = 'assets/img/img_cookie_sermon_5.png';
+  static const imgCookieSermon6 = 'assets/img/img_cookie_sermon_6.png';
   static const imgCookieDisable = 'assets/img/img_cookie_disable.png';
 
   static const imgCollectionCheering = 'assets/img/img_collection_cheering.png';
@@ -40,6 +45,7 @@ class AppAssets {
       1 => imgCookieCheering6,
       2 => imgCookieComfort6,
       3 => imgCookiePassion6,
+      4 => imgCookieSermon6,
       _ => imgCookieDisable,
     };
   }

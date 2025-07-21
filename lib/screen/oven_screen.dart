@@ -67,6 +67,14 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
       AppAssets.imgCookiePassion4,
       AppAssets.imgCookiePassion5,
       AppAssets.imgCookiePassion6,
+    ),
+    CookieImageAssetsData(
+      AppAssets.imgCookieSermon1,
+      AppAssets.imgCookieSermon2,
+      AppAssets.imgCookieSermon3,
+      AppAssets.imgCookieSermon4,
+      AppAssets.imgCookieSermon5,
+      AppAssets.imgCookieSermon6,
     )
   ];
 
