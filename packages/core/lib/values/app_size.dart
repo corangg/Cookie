@@ -6,4 +6,6 @@ class AppSize {
   static const bottomNavigationBarIconRadius = 40.0;
 
   static const cookieMessagePadding = 36.0;
+
+  static const ovenAnimationDuration = 800;
 }
