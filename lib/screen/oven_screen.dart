@@ -1,12 +1,15 @@
 import 'package:cookie/di/injection.dart';
 import 'package:cookie/notification/notification.dart';
+import 'package:cookie/values/assets.dart';
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
 import 'package:cookie/widgets/cookie_button_list.dart';
 import 'package:cookie/widgets/open_cookie_ui.dart';
+import 'package:core/base/base_screen.dart';
 import 'package:core/util/util.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/values/app_id.dart';
+import 'package:core/values/app_size.dart';
 import 'package:core/values/app_string.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +143,7 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
     return Stack(children: [
 
       Positioned(
-          top: 0,
+          top: 10,
           right: screenWidth*0.05,
           child: _countDownTimer()),
       _buildAnimatedContent(screenWidth, screenHeight),
@@ -236,3 +239,240 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
         scheduledAt: nextMidnight);
   }
 }
+
+/*
+class OvenScreen extends BaseScreen<OvenScreenViewModel> {
+  const OvenScreen({super.key});
+
+  @override
+  Color get appbarColor => AppColor.mainBackground;
+
+  @override
+  Color get bodyColor => AppColor.mainBackground;
+
+  @override
+  String get screenTitle => 'Oven';
+
+  @override
+  OvenScreenViewModel createViewModel() => sl<OvenScreenViewModel>();
+
+  @override
+  Widget buildBody(BuildContext context, OvenScreenViewModel viewModel) {
+    return OvenContent(viewModel: viewModel);
+  }
+}
+
+class OvenContent extends StatefulWidget {
+  final OvenScreenViewModel viewModel;
+  const OvenContent({super.key, required this.viewModel});
+
+  @override
+  State<OvenContent> createState() => _OvenContentState();
+}
+
+class _OvenContentState extends State<OvenContent> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  int _selectCookieType = -1;
+  DateTime _midNightTime = getTodayMidnight();
+
+  @override
+  void initState() {
+    super.initState();
+    setMidNightNotificationMessage();
+    setOvenAnimation();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Stack(children: [
+      Positioned(top: 10, right: screenWidth * 0.05, child: _countDownTimer()),
+      //_buildAnimatedContent(screenWidth, screenHeight),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+        child: Center(
+          child: SizedBox(
+            width: screenWidth,
+            height: screenHeight,
+            child: AnimatedTray(width: screenWidth, height: screenHeight),
+          ),
+        ),
+      ),
+      _buildOpenCookieUI(screenWidth, screenHeight)
+    ]);
+  }
+
+
+  setMidNightNotificationMessage() {
+    final now = tz.TZDateTime.now(tz.local);
+    final nextMidnight = tz.TZDateTime(tz.local, now.year, now.month, now.day);
+
+    NotificationService().schedule(
+        id: AppID.midNightNotificationID,
+        title: AppStrings.updateCookieTitleMessage,
+        body: AppStrings.updateCookieBodyMessage,
+        scheduledAt: nextMidnight);
+  }
+
+  setOvenAnimation(){
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: AppSize.ovenAnimationDuration),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _controller.forward();
+  }
+
+  Widget _countDownTimer(){
+    final endTimestamp = _midNightTime.millisecondsSinceEpoch;
+    return CountdownTimer(
+      endTime: endTimestamp,
+      widgetBuilder: (_, CurrentRemainingTime? time) {
+        if (time == null) {return const SizedBox.shrink();}
+        final hours = time.hours?.toString().padLeft(2, '0') ?? "00";
+        final min   = time.min?.toString().padLeft(2, '0')   ?? "00";
+        final sec   = time.sec?.toString().padLeft(2, '0')   ?? "00";
+        return Text("$hours:$min:$sec",
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: AppColor.countDown),
+        );
+      },
+      onEnd: (){
+        setState(() {
+          _midNightTime = getTodayMidnight();
+          widget.viewModel.upsertTodayCookie();
+        });
+      },
+    );
+  }
+
+  Widget _buildAnimatedContent(double screenWidth, double screenHeight) {
+    final double maxWidth = screenWidth * 0.8;
+    final double maxHeight = screenHeight * 0.8;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 12.0),
+      child: Center(
+        child: SizedBox(
+            width: maxWidth,
+            height: maxHeight,
+            child: SlideTransition(position: _offsetAnimation, child: _trayUI(maxWidth, maxHeight))
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOpenCookieUI(double screenWidth, double screenHeight){
+    final cookieImageList = CookieAssets.cookieImageDataList;
+    if (0 <= _selectCookieType && _selectCookieType < cookieImageList.length) {
+      return OpenCookieUI(
+          openCookieUIData: OpenCookieUIData(
+            screenWidth, screenHeight, cookieImageList[_selectCookieType],),
+          cookieInfo: widget.viewModel.cookie.infos[_selectCookieType],
+          onClose: () {
+            setState(() {
+              _selectCookieType = -1;
+            });
+          });
+    }else{
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _trayUI(double maxWidth, double maxHeight) {
+    final cookieImageList = CookieAssets.cookieImageDataList;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned.fill(child: _buildTrayImage(maxWidth, maxHeight)),
+        CookieButtonList(maxWidth: maxWidth,
+          maxHeight: maxHeight,
+          cookieImageDataList: cookieImageList,
+          onCookieSelected: (type) {
+            setState(() {
+              _selectCookieType = type;
+            });
+          },
+        )
+      ]
+      ,
+    );
+  }
+
+  Widget _buildTrayImage(double imgWidth, double imgHeight) {
+    return SizedBox(
+      width: imgWidth,
+      height: imgHeight,
+      child: Image.asset(AppAssets.imgTray, fit: BoxFit.contain),
+    );
+  }
+}
+
+class AnimatedTray extends StatefulWidget {
+  final double width, height;
+  const AnimatedTray({super.key, required this.width, required this.height});
+
+  @override
+  _AnimatedTrayState createState() => _AnimatedTrayState();
+}
+
+class _AnimatedTrayState extends State<AnimatedTray> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<Offset> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..forward();
+    _anim = Tween(begin: const Offset(0, -1), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _anim,
+      child: _trayUI(widget.width, widget.height),
+    );
+  }
+
+  Widget _trayUI(double maxWidth, double maxHeight) {
+    final cookieImageList = CookieAssets.cookieImageDataList;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned.fill(child: _buildTrayImage(maxWidth, maxHeight)),
+        CookieButtonList(maxWidth: maxWidth,
+          maxHeight: maxHeight,
+          cookieImageDataList: cookieImageList,
+          onCookieSelected: (type) {
+            setState(() {
+              _selectCookieType = type;
+            });
+          },
+        )
+      ]
+      ,
+    );
+
+
+  }*/
