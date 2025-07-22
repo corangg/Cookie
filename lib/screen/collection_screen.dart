@@ -38,8 +38,6 @@ class _CollectionBodyState extends State<_CollectionBody> with SingleTickerProvi
   final ScrollController _controller = ScrollController();
 
   final GlobalKey _bodyKey = GlobalKey();
-  OverlayEntry? _overlayEntry;
-  Rect? _bodyRect;
 
   CollectionData? _openedData;
 

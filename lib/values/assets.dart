@@ -38,8 +38,8 @@ class CookieAssets{
   ];
 
   static final List<MoreItemData> moreItemList = [
+    MoreItemData(item: '테마', iconAsset: AppAssets.icTheme, itemType: MoreItemType.theme()),
     MoreItemData(item: '수집률', iconAsset: AppAssets.icCollectionLate, itemType: MoreItemType.collectionLate()),
     MoreItemData(item: '앱 정보', iconAsset: AppAssets.icInfo, itemType: MoreItemType.aboutApp()),
-    MoreItemData(item: '테마', iconAsset: AppAssets.icTheme, itemType: MoreItemType.theme()),
   ];
 }

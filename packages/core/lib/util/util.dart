@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 typedef IntCallback = void Function(int value);
 
 DateTime stringToDateTime(String dateString) {
@@ -16,4 +18,9 @@ DateTime getTodayMidnight() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   return today.add(const Duration(days: 1));
+}
+
+double getAppBarHeight(BuildContext context){
+  final scaffoldState = Scaffold.of(context);
+  return scaffoldState.appBarMaxHeight ?? kToolbarHeight;
 }

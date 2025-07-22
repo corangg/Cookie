@@ -18,6 +18,8 @@ class AppColor {
   static const countDown = Color(0x99888888);
 
   static const mainTextColor = Color(0xFF593714);
+  static const defaultOverlay = Color(0xFFF5B82B);
+  static const defaultOverlayBorder = Color(0xFF593714);
 
 
 }

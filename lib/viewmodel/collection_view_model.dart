@@ -28,8 +28,8 @@ class CollectionViewModel extends BaseViewModel {
 
   void sortByList() {
     switch (viewType.code) {
-      case 1:collectionList.sortByNo();
-      case 2 :collectionList.sortByDate();
+      case 1 :collectionList.sortByNo();break;
+      case 2 :collectionList.sortByDate();break;
       case _ :throw ArgumentError('알 수 없는 CollectionViewType 코드: ${viewType.code}');
     }
     notifyListeners();

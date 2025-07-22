@@ -1,8 +1,11 @@
 import 'package:cookie/di/injection.dart';
+import 'package:cookie/main.dart';
 import 'package:cookie/values/assets.dart';
 import 'package:cookie/viewmodel/more_screen_view_model.dart';
 import 'package:core/base/base_screen.dart';
+import 'package:core/util/util.dart';
 import 'package:core/values/app_color.dart';
+import 'package:core/widgets/top_right_close_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +38,24 @@ class MoreContent extends StatefulWidget {
   State<MoreContent> createState() => _MoreContentState();
 }
 
-class _MoreContentState extends State<MoreContent> with SingleTickerProviderStateMixin {
+class _MoreContentState extends State<MoreContent> with SingleTickerProviderStateMixin, RouteAware {
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute != null) {
+      routeObserver.subscribe(this, modalRoute);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _overlayRemove();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +66,7 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
 
   Widget _profileListView(List<MoreItemData> items, double screenWidth, double screenHeight) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05, vertical: screenHeight*0.05),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05, vertical: 10),
       child: ListView.builder(
           itemCount: items.length,
           itemBuilder: (context, index) {
@@ -61,7 +81,7 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
         color: Colors.transparent,
         child: InkWell(
             onTap: () {
-              print('더보기 아이템(${item.item}) 클릭됨!');
+              _showOverlay(item.itemType.code);
             },
             borderRadius: BorderRadius.circular(8),
             child: Padding(
@@ -80,5 +100,99 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
             )
         )
     );
+  }
+
+  void _showOverlay(int type) {
+    if (_overlayEntry != null)  _overlayRemove();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final Widget overlayBody;
+    switch (type) {
+      case 2 :{overlayBody = _showThemeOverlay(screenWidth, screenHeight);break;}
+      case 3 :{overlayBody = _showCollectionLateOverlay(screenWidth, screenHeight);break;}
+      case 4 :{overlayBody = _showAboutApp(screenWidth, screenHeight);break;}
+      case _ :throw ArgumentError('알 수 없는 Overlay 타입: $type');
+    }
+
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final appBarHeight = getAppBarHeight(context);
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+          top: statusBarHeight + appBarHeight + 10,
+          left: screenWidth * 0.1,
+          right: screenWidth * 0.1,
+          bottom: screenHeight * 0.2,
+          child: Material(
+              color: Colors.transparent,
+              child: Positioned.fill(
+                child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColor.defaultOverlay,
+                      border: Border.all(
+                          color: AppColor.defaultOverlayBorder, width: 6),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Stack(
+                      children: [
+                        overlayBody,
+                        TopRightCloseButton(
+                          iconSize: 24, iconTop: 0, iconRight: 0,iconColor: AppColor.defaultOverlayBorder,
+                          onTap: () {
+                            setState(() {
+                              _overlayRemove();
+                            });
+                          },
+                        ),
+                      ],
+                    )
+                ),
+              )
+          )
+      ),
+    );
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  Widget _showThemeOverlay(double screenWidth, double screenHeight){
+    return Column(
+      children: [
+        SizedBox(height: screenHeight * 0.01,),
+        Align(
+          alignment: Alignment.center,
+          child: Text('테마', style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
+        ),
+      ],
+    );
+  }
+
+
+  Widget _showCollectionLateOverlay(double screenWidth, double screenHeight){
+    return Column(
+      children: [
+        SizedBox(height: screenHeight * 0.01,),
+        Align(
+          alignment: Alignment.center,
+          child: Text('수집률', style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
+        ),
+      ],
+    );
+  }
+
+  Widget _showAboutApp(double screenWidth, double screenHeight){
+    return Column(
+      children: [
+        SizedBox(height: screenHeight * 0.01,),
+        Align(
+          alignment: Alignment.center,
+          child: Text('앱 정보', style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
+        ),
+      ],
+    );
+  }
+
+  void _overlayRemove(){
+    _overlayEntry!.remove();
+    _overlayEntry = null;
   }
 }
