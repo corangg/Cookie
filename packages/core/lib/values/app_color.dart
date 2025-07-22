@@ -16,4 +16,8 @@ class AppColor {
   static const collectionCookieButton = Color(0xFFEEB85E);
 
   static const countDown = Color(0x99888888);
+
+  static const mainTextColor = Color(0xFF593714);
+
+
 }

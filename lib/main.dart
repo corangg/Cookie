@@ -2,7 +2,7 @@ import 'package:cookie/di/injection.dart';
 import 'package:cookie/notification/notification.dart';
 import 'package:cookie/screen/collection_screen.dart';
 import 'package:cookie/screen/oven_screen.dart';
-import 'package:cookie/screen/profile_screen.dart';
+import 'package:cookie/screen/more_screen.dart';
 import 'package:cookie/widgets/bottom_nav_item.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/widgets/custom_bottom_nav_bar.dart';
@@ -45,13 +45,13 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const OvenScreen(),
     const CollectionScreen(),
-    const ProfileScreen(),
+    const MoreScreen(),
   ];
 
   final List<NavItemData> _navItemDataList = const [
     NavItemData(AppAssets.icOven),
     NavItemData(AppAssets.icCollection),
-    NavItemData(AppAssets.icProfile, isProfile: true),
+    NavItemData(AppAssets.icMenu),
   ];
 
   @override

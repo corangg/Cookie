@@ -76,6 +76,10 @@ flutter:
     - assets/icons/ic_oven.png
     - assets/icons/ic_collection.png
     - assets/icons/ic_profile.png
+    - assets/icons/ic_collection_late.png
+    - assets/icons/ic_theme.png
+    - assets/icons/ic_info.png
+    - assets/icons/ic_menu.png
     - assets/img/img_oven_tray.png
     - assets/img/img_message_paper.png
     - assets/img/img_cookie_disable.png

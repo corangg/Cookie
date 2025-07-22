@@ -1,6 +1,6 @@
 import 'package:cookie/viewmodel/collection_view_model.dart';
 import 'package:cookie/viewmodel/oven_screen_view_model.dart';
-import 'package:cookie/viewmodel/profile_screen_view_model.dart';
+import 'package:cookie/viewmodel/more_screen_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:data/local/drift/drift_database.dart';
 import 'package:data/data_source/local_data_source.dart';
@@ -48,7 +48,7 @@ Future<void> initDependencies() async {
     fillCollectionDataListUseCase: sl()
   ));
 
-  sl.registerFactory(() => ProfileScreenViewModel(
+  sl.registerFactory(() => MoreScreenViewModel(
 
   ));
 }

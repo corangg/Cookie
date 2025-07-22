@@ -1,7 +1,11 @@
 class AppAssets {
   static const icOven = 'assets/icons/ic_oven.png';
   static const icCollection = 'assets/icons/ic_collection.png';
+  static const icMenu = 'assets/icons/ic_menu.png';
   static const icProfile = 'assets/icons/ic_profile.png';
+  static const icCollectionLate = 'assets/icons/ic_collection_late.png';
+  static const icTheme = 'assets/icons/ic_theme.png';
+  static const icInfo = 'assets/icons/ic_info.png';
 
   static const imgTray = 'assets/img/img_oven_tray.png';
   static const imgMessagePaper = 'assets/img/img_message_paper.png';

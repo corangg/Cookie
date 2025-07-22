@@ -163,3 +163,57 @@ final class CollectionViewTypeNo extends CollectionViewType {
 final class CollectionViewTypeDate extends CollectionViewType {
   const CollectionViewTypeDate(): super(2);
 }
+
+class MoreItemData {
+  final String item;
+  final String iconAsset;
+  final MoreItemType itemType;
+
+  const MoreItemData({
+    required this.item,
+    required this.iconAsset,
+    required this.itemType
+  });
+}
+
+sealed class MoreItemType {
+  final int code;
+  const MoreItemType(this.code);
+
+  const factory MoreItemType.profile() = MoreItemTypeProfile;
+  const factory MoreItemType.theme() = MoreItemTypeTheme;
+  const factory MoreItemType.collectionLate() = MoreItemTypeCollectionLate;
+  const factory MoreItemType.aboutApp() = MoreItemTypeAboutApp;
+  const factory MoreItemType.logOut() = MoreItemTypeLogOut;
+
+  static MoreItemType fromCode(int code) {
+    return switch (code) {
+      1 => const MoreItemType.profile(),
+      2 => const MoreItemType.theme(),
+      3 => const MoreItemType.collectionLate(),
+      4 => const MoreItemType.aboutApp(),
+      5 => const MoreItemType.logOut(),
+      _ => throw ArgumentError('알 수 없는 MoreItemType 코드: $code'),
+    };
+  }
+}
+
+final class MoreItemTypeProfile extends MoreItemType {
+  const MoreItemTypeProfile() : super(1);
+}
+
+final class MoreItemTypeTheme extends MoreItemType {
+  const MoreItemTypeTheme() : super(2);
+}
+
+final class MoreItemTypeCollectionLate extends MoreItemType {
+  const MoreItemTypeCollectionLate() : super(3);
+}
+
+final class MoreItemTypeAboutApp extends MoreItemType {
+  const MoreItemTypeAboutApp() : super(4);
+}
+
+final class MoreItemTypeLogOut extends MoreItemType {
+  const MoreItemTypeLogOut() : super(5);
+}
