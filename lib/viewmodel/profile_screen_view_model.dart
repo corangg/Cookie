@@ -1,4 +1,4 @@
-import 'package:core/base/baseViewModel.dart';
+import 'package:core/base/base_view_model.dart';
 
 class ProfileScreenViewModel extends BaseViewModel {
 

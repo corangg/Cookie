@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:core/base/baseViewModel.dart';
+import 'package:core/base/base_view_model.dart';
 import 'package:domain/extension/extension.dart';
 import 'package:domain/model/models.dart';
 import 'package:domain/usecases/collection_usecase.dart';
