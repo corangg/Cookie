@@ -20,6 +20,11 @@ DateTime getTodayMidnight() {
   return today.add(const Duration(days: 1));
 }
 
+DateTime getNextMidnight() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day + 1);
+}
+
 double getAppBarHeight(BuildContext context){
   final scaffoldState = Scaffold.of(context);
   return scaffoldState.appBarMaxHeight ?? kToolbarHeight;

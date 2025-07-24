@@ -221,12 +221,14 @@ class _OvenScreenBodyState extends State<_OvenScreenBody> with SingleTickerProvi
       },
       onEnd: (){
         setState(() {
-          _midNightTime = getTodayMidnight();
+          _midNightTime = getNextMidnight();
           viewModel.upsertTodayCookie();
         });
       },
     );
   }
+
+
 
   setMidNightNotificationMessage() {
     final now = tz.TZDateTime.now(tz.local);
