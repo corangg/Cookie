@@ -49,6 +49,6 @@ Future<void> initDependencies() async {
   ));
 
   sl.registerFactory(() => MoreScreenViewModel(
-
+    getTypeCollectionDataUseCase: sl()
   ));
 }
