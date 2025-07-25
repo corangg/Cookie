@@ -8,10 +8,10 @@ import 'package:core/util/util.dart';
 import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/values/app_string.dart';
-import 'package:core/widgets/custom_img_button.dart';
 import 'package:core/widgets/top_right_close_button.dart';
 import 'package:domain/model/models.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MoreScreen extends BaseScreen<MoreScreenViewModel> {
   const MoreScreen({super.key});
@@ -65,10 +65,33 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return _profileListView(CookieAssets.moreItemList, screenWidth, screenHeight);
+    return Column(
+      children: [
+        Expanded(child: _menuListView(CookieAssets.moreItemList, screenWidth, screenHeight)),
+        _getAppVersion()
+      ],
+    );
   }
 
-  Widget _profileListView(List<MoreItemData> items, double screenWidth, double screenHeight) {
+  Widget _getAppVersion(){
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Text('Version Loading…');
+        }
+        final info = snapshot.data!;
+        return Text('v ${info.version}',
+          style: TextStyle(
+          color: AppColor.mainTextColor,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),);
+      },
+    );
+  }
+
+  Widget _menuListView(List<MoreItemData> items, double screenWidth, double screenHeight) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05, vertical: 10),
       child: ListView.builder(

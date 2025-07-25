@@ -1,6 +1,9 @@
 class AppStrings {
   static const appTitle = '쿠키';
 
+  static const privacyPolicyTitle = '개인 정보 처리 방침';
+  static const privacyPolicy = '해당 앱은 개인 정보를 수집, 이용 하지 않습니다.';
+
   //label
   static const labelBottomNavigationBarOven = 'oven';
   static const labelBottomNavigationBarCollection = 'collection';
