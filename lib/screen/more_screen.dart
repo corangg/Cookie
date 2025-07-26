@@ -2,10 +2,10 @@ import 'package:cookie/di/injection.dart';
 import 'package:cookie/main.dart';
 import 'package:cookie/values/assets.dart';
 import 'package:cookie/viewmodel/more_screen_view_model.dart';
+import 'package:cookie/widgets/show_app_about_overlay_body.dart';
 import 'package:cookie/widgets/show_collection_late_overlay_body.dart';
 import 'package:core/base/base_screen.dart';
 import 'package:core/util/util.dart';
-import 'package:core/values/app_assets.dart';
 import 'package:core/values/app_color.dart';
 import 'package:core/values/app_string.dart';
 import 'package:core/widgets/top_right_close_button.dart';
@@ -141,11 +141,20 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
     final Widget overlayBody;
     switch (type) {
       case 2 :{overlayBody = _showThemeOverlay(screenWidth, screenHeight);break;}
-      case 3 :{overlayBody = ShowCollectionLateOverlayBody(
-        overlayWidth: screenWidth*0.8,
-        overlayHeight: overlayHeight,
-        viewModel: widget.viewModel,);break;}
-      case 4 :{overlayBody = _showAboutApp(screenWidth, screenHeight);break;}
+      case 3 :{
+        overlayBody = ShowCollectionLateOverlayBody(
+          overlayWidth: screenWidth * 0.8,
+          overlayHeight: overlayHeight,
+          viewModel: widget.viewModel,);
+        break;
+      }
+      case 4 :{
+        overlayBody = ShowAppAboutOverlayBody(
+          overlayWidth: screenWidth * 0.8,
+          overlayHeight: overlayHeight,
+          viewModel: widget.viewModel,);
+        break;
+      }
       case _ :throw ArgumentError('알 수 없는 Overlay 타입: $type');
     }
 

@@ -55,7 +55,7 @@ class _ShowCollectionLateOverlayBody extends State<ShowCollectionLateOverlayBody
         SizedBox(height: widget.overlayHeight * 0.01,),
         Align(
           alignment: Alignment.center,
-          child: Text('수집률', style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
+          child: Text(AppStrings.collectionLateTitle, style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
         ),
         SizedBox(
           width: widget.overlayWidth,
@@ -121,10 +121,14 @@ class _ShowCollectionLateOverlayBody extends State<ShowCollectionLateOverlayBody
               bottom: 0,
               child: Align(
                 alignment: Alignment.center,
-                child: Text('$late/$itemSize', style: TextStyle(
-                  color: AppColor.mainTextColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,),),
+                child: Text(
+                  '$late/$itemSize',
+                  style: TextStyle(
+                    color: AppColor.mainTextColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
