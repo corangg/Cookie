@@ -209,18 +209,6 @@ class _MoreContentState extends State<MoreContent> with SingleTickerProviderStat
     );
   }
 
-  Widget _showAboutApp(double screenWidth, double screenHeight){
-    return Column(
-      children: [
-        SizedBox(height: screenHeight * 0.01,),
-        Align(
-          alignment: Alignment.center,
-          child: Text('앱 정보', style: TextStyle(color: AppColor.mainTextColor, fontSize: 18, fontWeight: FontWeight.bold,),),
-        ),
-      ],
-    );
-  }
-
   Widget _showOkButton() {
     return Align(
       alignment: const Alignment(0.0, 0.95),
